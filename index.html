@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BillHive — Your Household Bills. Handled.</title>
+<meta name="description" content="Self-hosted household bill management. Smart splitting, Zelle/Venmo deep-links, HTML email summaries, and month-over-month trends. One Docker container.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   TOKENS
+══════════════════════════════════════════════ */
+:root {
+  --bg:      #0c0d0f;
+  --surface: #141518;
+  --surface2:#1c1e22;
+  --surface3:#242629;
+  --border:  #2a2c31;
+  --border2: #34373d;
+  --text:    #e4e5e8;
+  --muted:   #767880;
+  --muted2:  #4a4c52;
+  --amber:   #F5A800;
+  --blue:    #5bc4f5;
+  --orange:  #f5a623;
+  --purple:  #b39ddb;
+  --red:     #ef5350;
+  --green:   #a8e063;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Hex tile background: fine grid ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50ZM28 100L0 84L0 68L28 52L56 68L56 84Z' fill='none' stroke='%23F5A800' stroke-opacity='0.08' stroke-width='0.75'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Hex tile background: large-scale overlay for depth ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='168' height='300'%3E%3Cpath d='M84 198L0 150L0 48L84 0L168 48L168 150ZM84 300L0 252L0 204L84 156L168 204L168 252Z' fill='none' stroke='%23F5A800' stroke-opacity='0.035' stroke-width='1.5'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Hero canvas for glowing honeycomb cluster ── */
+#hive-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Decorative large hex stamps at section edges ── */
+.hex-stamp {
+  position: absolute;
+  clip-path: polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
+  background: rgba(245,168,0,0.03);
+  border: none;
+  pointer-events: none;
+  z-index: 0;
+}
+.hex-stamp-outline {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+/* ══════════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════════ */
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+section { position: relative; }
+
+/* ══════════════════════════════════════════════
+   NAV
+══════════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  background: rgba(12,13,15,0.88);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(245,168,0,0.07);
+  transition: border-color 0.3s;
+}
+.nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+.nav-hexmark {
+  width: 26px; height: 26px;
+  clip-path: polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
+  background: var(--amber);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.nav-hexmark svg { display: block; }
+.nav-name {
+  font-family: 'Syncopate', sans-serif;
+  font-weight: 700; font-size: 14px; letter-spacing: 0.02em; color: var(--text);
+}
+.nav-name span { color: var(--amber); }
+.nav-links { display: flex; align-items: center; gap: 26px; }
+.nav-links a {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+.btn-nav {
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  background: var(--amber); color: #0c0d0f;
+  padding: 7px 16px; border-radius: 6px; text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-nav:hover { background: #ffc12d; transform: translateY(-1px); }
+
+/* ══════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════ */
+#hero {
+  min-height: 100vh; padding: 80px 0 60px;
+  display: flex; align-items: center; overflow: hidden;
+}
+.hero-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(245,168,0,0.07);
+  border: 1px solid rgba(245,168,0,0.18);
+  border-radius: 20px; padding: 5px 13px;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--amber);
+  margin-bottom: 26px;
+}
+.hero-badge-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--amber);
+  animation: blink 2.4s ease-in-out infinite;
+}
+@keyframes blink {
+  0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+}
+h1.hero-title {
+  font-family: 'Syncopate', sans-serif; font-weight: 700;
+  font-size: clamp(40px, 5.5vw, 68px); line-height: 1.02;
+  letter-spacing: -0.03em; margin-bottom: 8px;
+}
+h1.hero-title .h-bill { color: var(--text); }
+h1.hero-title .h-hive { color: var(--amber); }
+.hero-tagline {
+  font-family: 'Syncopate', sans-serif; font-weight: 400;
+  font-size: clamp(11px, 1.4vw, 15px); letter-spacing: 0.08em;
+  color: var(--muted); text-transform: uppercase; margin-bottom: 26px;
+}
+.hero-desc {
+  font-size: 15px; line-height: 1.75; color: var(--muted);
+  max-width: 440px; margin-bottom: 38px; font-weight: 300;
+}
+.hero-desc strong { color: var(--text); font-weight: 500; }
+.hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-p {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--amber); color: #0c0d0f;
+  padding: 13px 22px; border-radius: 8px;
+  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+  letter-spacing: 0.09em; text-transform: uppercase; text-decoration: none;
+  transition: all 0.2s; border: none; cursor: pointer;
+}
+.btn-p:hover { background: #ffc12d; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(245,168,0,0.28); }
+.btn-s {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: transparent; color: var(--text);
+  padding: 13px 22px; border-radius: 8px;
+  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+  letter-spacing: 0.09em; text-transform: uppercase; text-decoration: none;
+  border: 1px solid var(--border2); transition: all 0.2s;
+}
+.btn-s:hover { border-color: var(--amber); color: var(--amber); transform: translateY(-2px); }
+
+/* ── Hero visual ── */
+.hero-visual {
+  display: flex; align-items: center; justify-content: center; position: relative;
+}
+.hv-wrap { position: relative; width: 300px; height: 300px; display: flex; align-items: center; justify-content: center; }
+.hv-ring {
+  position: absolute; border-radius: 50%; border: 1px solid;
+  animation: spin 24s linear infinite;
+}
+.hv-ring-a { width: 340px; height: 340px; border-color: rgba(245,168,0,0.07); animation-duration: 28s; }
+.hv-ring-b { width: 255px; height: 255px; border-color: rgba(245,168,0,0.11); animation-duration: 19s; animation-direction: reverse; }
+.hv-ring-c { width: 400px; height: 400px; border-color: rgba(245,168,0,0.04); animation-duration: 40s; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.hv-ring-a::after, .hv-ring-b::after {
+  content: ''; position: absolute; border-radius: 50%; background: var(--amber);
+  box-shadow: 0 0 8px var(--amber);
+}
+.hv-ring-a::after { width: 7px; height: 7px; top: -3.5px; left: calc(50% - 3.5px); }
+.hv-ring-b::after { width: 5px; height: 5px; bottom: -2.5px; left: calc(50% - 2.5px); opacity: 0.7; }
+.hv-glow {
+  position: absolute; width: 220px; height: 220px;
+  background: radial-gradient(ellipse, rgba(245,168,0,0.18) 0%, transparent 70%);
+  border-radius: 50%; animation: glow 4.5s ease-in-out infinite;
+}
+@keyframes glow { 0%,100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
+.hv-hex {
+  width: 192px; height: 192px;
+  clip-path: polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
+  background: linear-gradient(140deg, #ffba2e 0%, #F5A800 55%, #e09600 100%);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 2;
+  animation: float 6.5s ease-in-out infinite;
+  box-shadow: 0 0 80px rgba(245,168,0,0.22), 0 0 160px rgba(245,168,0,0.08);
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  33% { transform: translateY(-9px) rotate(0.8deg); }
+  66% { transform: translateY(5px) rotate(-0.4deg); }
+}
+.hv-hex::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.22) 0%, transparent 55%);
+}
+.hv-hex svg { display: block; position: relative; z-index: 1; }
+/* Float cards */
+.hv-card {
+  position: absolute; z-index: 4;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 14px;
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  white-space: nowrap; animation: card-bob 5s ease-in-out infinite;
+}
+.hv-card.c1 { top: 8px; right: -16px; animation-delay: 0s; animation-duration: 5.5s; }
+.hv-card.c2 { bottom: 36px; left: -24px; animation-delay: 1.6s; animation-duration: 6.2s; }
+.hv-card.c3 { top: 46%; right: -44px; animation-delay: 0.9s; animation-duration: 4.9s; }
+@keyframes card-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.hv-card .cl { color: var(--muted); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 3px; }
+.hv-card .cv { color: var(--amber); font-weight: 500; font-size: 15px; }
+.hv-card .cn { color: var(--text); }
+.hv-card .cd { color: var(--muted); font-size: 9px; margin-top: 2px; }
+
+/* ══════════════════════════════════════════════
+   STATS STRIP
+══════════════════════════════════════════════ */
+.stats-strip {
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.stats-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border);
+}
+.stat-box {
+  background: var(--surface); padding: 28px 20px; text-align: center;
+}
+.stat-n {
+  font-family: 'Syncopate', sans-serif; font-weight: 700;
+  font-size: 30px; color: var(--amber); letter-spacing: -0.03em; margin-bottom: 5px;
+}
+.stat-l {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+}
+
+/* ══════════════════════════════════════════════
+   SECTION SCAFFOLDING
+══════════════════════════════════════════════ */
+.section-kicker {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber); margin-bottom: 12px;
+}
+.section-h {
+  font-family: 'Syncopate', sans-serif; font-weight: 700;
+  font-size: clamp(22px, 3vw, 38px); letter-spacing: -0.02em; margin-bottom: 14px;
+}
+.section-p {
+  font-size: 15px; color: var(--muted); font-weight: 300; line-height: 1.72;
+  max-width: 500px; margin-bottom: 56px;
+}
+
+/* ══════════════════════════════════════════════
+   HOW IT WORKS
+══════════════════════════════════════════════ */
+#how { padding: 100px 0; border-top: 1px solid var(--border); }
+.steps-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+}
+.step-card {
+  background: var(--surface); padding: 34px 28px;
+  transition: background 0.2s;
+}
+.step-card:hover { background: var(--surface2); }
+.step-num-hex {
+  position: relative; width: 44px; height: 44px; margin-bottom: 18px;
+}
+.step-num-hex::before {
+  content: ''; position: absolute; inset: 0;
+  clip-path: polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
+  background: rgba(245,168,0,0.09);
+}
+.step-num-hex span {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; color: var(--amber);
+}
+.step-emoji { font-size: 22px; margin-bottom: 14px; display: block; }
+.step-t {
+  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+  letter-spacing: 0.09em; text-transform: uppercase; color: var(--text); margin-bottom: 10px;
+}
+.step-d { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+/* ══════════════════════════════════════════════
+   FEATURES
+══════════════════════════════════════════════ */
+#features { padding: 100px 0; border-top: 1px solid var(--border); }
+.feat-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+}
+.feat-card {
+  background: var(--surface); padding: 38px 32px;
+  position: relative; overflow: hidden; transition: background 0.25s;
+}
+.feat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--amber); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.feat-card:hover { background: var(--surface2); }
+.feat-card:hover::before { transform: scaleX(1); }
+.feat-icon {
+  width: 44px; height: 44px;
+  clip-path: polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
+  background: rgba(245,168,0,0.09);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 19px; margin-bottom: 20px;
+  transition: background 0.2s;
+}
+.feat-card:hover .feat-icon { background: rgba(245,168,0,0.16); }
+.feat-t {
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--text); margin-bottom: 10px;
+}
+.feat-d { font-size: 13px; color: var(--muted); line-height: 1.66; font-weight: 300; }
+
+/* ══════════════════════════════════════════════
+   APP PREVIEW
+══════════════════════════════════════════════ */
+#preview { padding: 100px 0; border-top: 1px solid var(--border); overflow: hidden; }
+.browser-chrome {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 14px; overflow: hidden; margin-top: 56px;
+  box-shadow: 0 48px 120px rgba(0,0,0,0.55), 0 0 0 1px rgba(245,168,0,0.05);
+}
+.bc-bar {
+  background: var(--surface2); border-bottom: 1px solid var(--border);
+  padding: 11px 16px; display: flex; align-items: center; gap: 12px;
+}
+.bc-dots { display: flex; gap: 6px; }
+.bc-dot { width: 10px; height: 10px; border-radius: 50%; }
+.bc-dot.r { background: #ef5350; } .bc-dot.y { background: #ffd54f; } .bc-dot.g { background: #a8e063; }
+.bc-url {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+  padding: 4px 12px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted);
+  display: flex; align-items: center; gap: 5px; max-width: 300px;
+}
+.bc-url-lock { color: var(--amber); }
+/* App shell inside browser */
+.app-shell-nav {
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: 48px;
+}
+.app-shell-logo { display: flex; align-items: center; gap: 7px; }
+.app-shell-hex {
+  width: 20px; height: 20px;
+  clip-path: polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
+  background: var(--amber);
+}
+.app-shell-name {
+  font-family: 'Syncopate', sans-serif; font-weight: 700; font-size: 12px; color: var(--text);
+}
+.app-shell-name span { color: var(--amber); }
+.app-month-tag {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 3px 11px;
+  font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text);
+}
+.app-tabs-bar {
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  display: flex; padding: 0 20px;
+}
+.app-tab-item {
+  height: 36px; display: flex; align-items: center; padding: 0 13px;
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); border-bottom: 2px solid transparent;
+}
+.app-tab-item.on { color: var(--amber); border-bottom-color: var(--amber); }
+.app-badge {
+  background: var(--surface3); border-radius: 10px; padding: 1px 5px;
+  font-size: 9px; color: var(--muted); margin-left: 4px;
+}
+/* Bill list mockup */
+.app-body { background: var(--bg); padding: 18px 20px; }
+.mbill {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; margin-bottom: 7px; overflow: hidden;
+}
+.mbill-row {
+  display: grid; grid-template-columns: 1fr 110px 110px 30px;
+  gap: 8px; align-items: center; padding: 12px 14px;
+}
+.mbill-left { display: flex; align-items: center; gap: 8px; }
+.mbill-icon {
+  width: 28px; height: 28px; border-radius: 5px;
+  display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0;
+}
+.mbill-name { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text); }
+.mbill-sub  { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 1px; }
+.mbill-total { font-family: 'DM Mono', monospace; font-weight: 500; font-size: 16px; color: var(--amber); text-align: right; }
+.mbill-share { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); text-align: right; margin-top: 2px; }
+.mbill-tag  { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); text-align: right; }
+.mbill-btn  {
+  width: 22px; height: 22px; border: 1px solid var(--border);
+  border-radius: 4px; display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: var(--muted);
+}
+/* Expanded bill body */
+.mbill-body { border-top: 1px solid var(--border); background: var(--surface2); padding: 11px 14px; }
+.mbill-lhd {
+  display: grid; grid-template-columns: 1fr 70px 80px;
+  gap: 8px; font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px;
+}
+.mbill-line {
+  display: grid; grid-template-columns: 1fr 70px 80px;
+  gap: 8px; align-items: center; padding: 5px 0;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.mpersontag { display: inline-flex; align-items: center; gap: 4px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text); }
+.mdot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.mpct  { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); text-align: right; }
+.mamt  { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; text-align: right; }
+/* Summary row */
+.msum-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 12px; }
+.msum-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 14px; position: relative; overflow: hidden;
+}
+.msum-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.msum-card.ca::before { background: var(--amber); }
+.msum-card.co::before { background: var(--orange); }
+.msum-card.cp::before { background: var(--purple); }
+.msum-name { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.msum-val  { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 700; line-height: 1; margin: 4px 0; }
+.msum-det  { font-family: 'DM Mono', monospace; font-size: 8px; color: var(--muted); margin-top: 2px; }
+
+/* ══════════════════════════════════════════════
+   SETUP
+══════════════════════════════════════════════ */
+#setup { padding: 100px 0; border-top: 1px solid var(--border); }
+.setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+.setup-steps-list { display: flex; flex-direction: column; gap: 26px; margin-top: 44px; }
+.setup-step { display: flex; gap: 16px; align-items: flex-start; }
+.setup-step-hex {
+  width: 30px; height: 30px;
+  clip-path: polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
+  background: rgba(245,168,0,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace; font-size: 11px; color: var(--amber);
+  flex-shrink: 0; margin-top: 1px;
+}
+.setup-step-body h4 { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.07em; color: var(--text); margin-bottom: 5px; }
+.setup-step-body p  { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+.setup-note {
+  background: rgba(245,168,0,0.05); border: 1px solid rgba(245,168,0,0.14);
+  border-radius: 8px; padding: 14px 16px; margin-top: 26px;
+  font-size: 13px; color: var(--muted); line-height: 1.65;
+}
+.setup-note strong { color: var(--amber); font-weight: 500; }
+/* Code panel */
+.code-panel {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 12px; overflow: hidden; margin-top: 44px;
+}
+.code-panel-bar {
+  background: var(--surface2); border-bottom: 1px solid var(--border);
+  padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;
+}
+.code-panel-bar-title {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--muted);
+}
+.code-panel-tag {
+  background: rgba(245,168,0,0.1); border: 1px solid rgba(245,168,0,0.2);
+  border-radius: 4px; padding: 2px 8px;
+  font-family: 'DM Mono', monospace; font-size: 9px; color: var(--amber); letter-spacing: 0.06em;
+}
+.code-body {
+  padding: 20px; font-family: 'DM Mono', monospace; font-size: 12px;
+  line-height: 1.95; overflow-x: auto;
+}
+.c-cmt  { color: var(--muted); }
+.c-cmd  { color: var(--text); }
+.c-flg  { color: var(--blue); }
+.c-val  { color: var(--amber); }
+.c-str  { color: var(--green); }
+.code-panel-sep { border: none; border-top: 1px solid var(--border); }
+.code-body-sm { padding: 14px 20px 18px; font-family: 'DM Mono', monospace; font-size: 11px; line-height: 2; }
+.tech-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.tech-pill {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 12px;
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--muted);
+}
+.tech-pill.amber {
+  background: rgba(245,168,0,0.07); border-color: rgba(245,168,0,0.18); color: var(--amber);
+}
+
+/* ══════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════ */
+footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
+.footer-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; margin-bottom: 48px; }
+.footer-brand-desc {
+  font-size: 13px; color: var(--muted); line-height: 1.65;
+  max-width: 280px; font-weight: 300; margin-top: 12px;
+}
+.footer-col-title {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+}
+.footer-col-links { display: flex; flex-direction: column; gap: 8px; }
+.footer-col-links a {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--muted); text-decoration: none; transition: color 0.2s;
+}
+.footer-col-links a:hover { color: var(--amber); }
+.footer-bottom {
+  border-top: 1px solid var(--border); padding-top: 22px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted2); letter-spacing: 0.06em;
+}
+.footer-badge { display: flex; align-items: center; gap: 6px; }
+.footer-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); }
+
+/* ══════════════════════════════════════════════
+   REVEAL ANIMATIONS
+══════════════════════════════════════════════ */
+.reveal {
+  opacity: 0; transform: translateY(22px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+.d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; }
+.d3 { transition-delay: 0.3s; } .d4 { transition-delay: 0.4s; }
+.d5 { transition-delay: 0.5s; }
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════ */
+@media (max-width: 920px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-visual { display: none; }
+  .steps-grid { grid-template-columns: repeat(2,1fr); }
+  .feat-grid  { grid-template-columns: 1fr 1fr; }
+  .setup-grid { grid-template-columns: 1fr; gap: 40px; }
+  .stats-row  { grid-template-columns: repeat(2,1fr); }
+  .footer-top { flex-direction: column; }
+  .msum-row   { grid-template-columns: 1fr; }
+  .mbill-row  { grid-template-columns: 1fr 90px 30px; }
+  .mbill-tag  { display: none; }
+}
+@media (max-width: 600px) {
+  .wrap { padding: 0 20px; } nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .steps-grid, .feat-grid { grid-template-columns: 1fr; }
+  .hero-ctas { flex-direction: column; }
+  .btn-p, .btn-s { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav id="main-nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-hexmark">
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+        <rect x="1" y="2" width="8" height="2" rx="1" fill="#0c0d0f"/>
+        <rect x="1" y="6" width="12" height="2" rx="1" fill="#0c0d0f"/>
+        <rect x="1" y="10" width="6" height="2" rx="1" fill="#0c0d0f"/>
+      </svg>
+    </div>
+    <div class="nav-name">Bill<span>Hive</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="#how">How It Works</a>
+    <a href="#features">Features</a>
+    <a href="#preview">Preview</a>
+    <a href="#setup">Self-Host</a>
+  </div>
+  <a href="#setup" class="btn-nav">Self-Host →</a>
+</nav>
+
+<!-- ═══════ HERO ═══════ -->
+<section id="hero" style="position:relative;overflow:hidden;">
+  <canvas id="hive-canvas"></canvas>
+  <div class="wrap">
+    <div class="hero-grid">
+
+      <div>
+        <div class="hero-badge">
+          <div class="hero-badge-dot"></div>
+          Self-Hosted · Open Source
+        </div>
+        <h1 class="hero-title">
+          <span class="h-bill">BILL</span><span class="h-hive">HIVE</span>
+        </h1>
+        <div class="hero-tagline">Your household bills. Handled.</div>
+        <p class="hero-desc">
+          One person fronts every bill. Everyone else owes them money.
+          BillHive tracks the splits, generates <strong>Zelle &amp; Venmo deep-links</strong>,
+          and sends beautiful <strong>HTML email summaries</strong> — all from a single
+          Docker container on your own server.
+        </p>
+        <div class="hero-ctas">
+          <a href="#setup" class="btn-p">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            Self-Host in Minutes
+          </a>
+          <a href="https://github.com/martyportatoes/billflow" class="btn-s" target="_blank">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hv-wrap">
+          <div class="hv-ring hv-ring-c"></div>
+          <div class="hv-ring hv-ring-a"></div>
+          <div class="hv-ring hv-ring-b"></div>
+          <div class="hv-glow"></div>
+          <div class="hv-hex">
+            <svg width="78" height="78" viewBox="0 0 78 78" fill="none">
+              <rect x="10" y="15" width="34" height="8" rx="4" fill="#0c0d0f"/>
+              <rect x="10" y="31" width="54" height="8" rx="4" fill="#0c0d0f"/>
+              <rect x="10" y="47" width="26" height="8" rx="4" fill="#0c0d0f"/>
+              <circle cx="60" cy="56" r="13" fill="#0c0d0f" opacity="0.18"/>
+              <path d="M55 56l3.5 3.5 7.5-7.5" stroke="#0c0d0f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="hv-card c1">
+            <div class="cl">Wife owes</div>
+            <div class="cv">$1,287.50</div>
+            <div class="cd">Zelle request ready</div>
+          </div>
+          <div class="hv-card c2">
+            <div class="cl">This month</div>
+            <div class="cn">Mortgage · Electric · Verizon</div>
+            <div class="cd">3 bills · $3,260 total</div>
+          </div>
+          <div class="hv-card c3">
+            <div class="cl">Dad covers Mom</div>
+            <div class="cv" style="color:#f5a623;">$387.50</div>
+            <div class="cd">Verizon line — covered</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ STATS ═══════ -->
+<div class="stats-strip">
+  <div class="wrap">
+    <div class="stats-row">
+      <div class="stat-box reveal"><div class="stat-n">1</div><div class="stat-l">Docker container</div></div>
+      <div class="stat-box reveal d1"><div class="stat-n">4</div><div class="stat-l">Email providers</div></div>
+      <div class="stat-box reveal d2"><div class="stat-n">∞</div><div class="stat-l">Bills &amp; People</div></div>
+      <div class="stat-box reveal d3"><div class="stat-n">$0</div><div class="stat-l">Subscription</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ HOW IT WORKS ═══════ -->
+<section id="how">
+  <div class="wrap">
+    <div class="section-kicker reveal">Process</div>
+    <h2 class="section-h reveal d1">How BillHive works</h2>
+    <p class="section-p reveal d2">From bill entry to payment collection in four steps. No SaaS account, no subscription — just your server.</p>
+
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-num-hex"><span>01</span></div>
+        <span class="step-emoji">📋</span>
+        <div class="step-t">Add your bills</div>
+        <div class="step-d">Create recurring bills and assign lines to household members. Choose percentage splits or fixed dollar amounts. Set "covered by" relationships for complex family arrangements.</div>
+      </div>
+      <div class="step-card reveal d1">
+        <div class="step-num-hex"><span>02</span></div>
+        <span class="step-emoji">✏️</span>
+        <div class="step-t">Enter amounts</div>
+        <div class="step-d">Each month, enter the actual bill totals. BillHive instantly calculates each person's share. Enable auto-carry for fixed bills like mortgage that don't change month to month.</div>
+      </div>
+      <div class="step-card reveal d2">
+        <div class="step-num-hex"><span>03</span></div>
+        <span class="step-emoji">💰</span>
+        <div class="step-t">See who owes what</div>
+        <div class="step-d">The Summary tab shows each person's total owed with a full bill-by-bill breakdown. Your personal outlay is tracked separately. Month-over-month charts show spending history.</div>
+      </div>
+      <div class="step-card reveal d3">
+        <div class="step-num-hex"><span>04</span></div>
+        <span class="step-emoji">📤</span>
+        <div class="step-t">Collect payment</div>
+        <div class="step-d">Send personalized HTML email summaries with one tap. Zelle and Venmo deep-links are auto-generated with the exact amount. A monthly checklist tracks what's been sent and collected.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FEATURES ═══════ -->
+<section id="features" style="position:relative;overflow:hidden;">
+  <div class="hex-stamp" style="width:320px;height:320px;top:-80px;right:-60px;"></div>
+  <div class="hex-stamp" style="width:180px;height:180px;bottom:-40px;left:-30px;"></div>
+  <div class="wrap">
+    <div class="section-kicker reveal">Features</div>
+    <h2 class="section-h reveal d1">Everything you need</h2>
+    <p class="section-p reveal d2">Built for real households with real complexity. Flexible enough to handle any bill arrangement you can imagine.</p>
+
+    <div class="feat-grid">
+      <div class="feat-card reveal">
+        <div class="feat-icon">⚖️</div>
+        <div class="feat-t">Smart bill splitting</div>
+        <div class="feat-d">Split by percentage or fixed dollar amounts per line. Set "covered by" relationships — Dad can pay on Mom's behalf while Mom shows $0 owed.</div>
+      </div>
+      <div class="feat-card reveal d1">
+        <div class="feat-icon">💸</div>
+        <div class="feat-t">Payment deep-links</div>
+        <div class="feat-d">Zelle and Venmo links auto-generated with the exact amount pre-filled. Custom Zelle URLs supported for banks with their own enrollment flows.</div>
+      </div>
+      <div class="feat-card reveal d2">
+        <div class="feat-icon">📧</div>
+        <div class="feat-t">HTML email summaries</div>
+        <div class="feat-d">Beautiful dark-themed bill summaries sent to each person with one click. Supports Mailgun, SendGrid, Resend, and SMTP. API keys stay server-side, never exposed to the browser.</div>
+      </div>
+      <div class="feat-card reveal d3">
+        <div class="feat-icon">📈</div>
+        <div class="feat-t">Trend charts</div>
+        <div class="feat-d">Track spending month-over-month with line charts, donut breakdowns, and stacked bar charts. Two views: Per Person and By Bill. Powered by Chart.js.</div>
+      </div>
+      <div class="feat-card reveal d4">
+        <div class="feat-icon">✅</div>
+        <div class="feat-t">Monthly checklist</div>
+        <div class="feat-d">Auto-generated checklist tracks what's been emailed, paid, and collected each month. Items are built dynamically from your configured people and bills.</div>
+      </div>
+      <div class="feat-card reveal d5">
+        <div class="feat-icon">🔒</div>
+        <div class="feat-t">Fully self-hosted</div>
+        <div class="feat-d">One Docker container. One SQLite database. One named volume. Deploy behind Authelia or Authentik for per-user data isolation. Your data never leaves your server.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ PREVIEW ═══════ -->
+<section id="preview">
+  <div class="wrap">
+    <div class="section-kicker reveal">App Preview</div>
+    <h2 class="section-h reveal d1">See it in action</h2>
+    <p class="section-p reveal d2">The Bills tab — enter totals, see splits instantly across all household members. Every number updates live as you type.</p>
+
+    <div class="browser-chrome reveal d2">
+      <div class="bc-bar">
+        <div class="bc-dots">
+          <div class="bc-dot r"></div>
+          <div class="bc-dot y"></div>
+          <div class="bc-dot g"></div>
+        </div>
+        <div class="bc-url">
+          <span class="bc-url-lock">🔒</span>
+          bills.yourhome.local
+        </div>
+      </div>
+      <div class="app-shell-nav">
+        <div class="app-shell-logo">
+          <div class="app-shell-hex"></div>
+          <div class="app-shell-name">Bill<span>Hive</span></div>
+        </div>
+        <div class="app-month-tag">February 2026</div>
+      </div>
+      <div class="app-tabs-bar">
+        <div class="app-tab-item on">📋 Bills <span class="app-badge">3</span></div>
+        <div class="app-tab-item">💰 Summary</div>
+        <div class="app-tab-item">📤 Send &amp; Receive</div>
+        <div class="app-tab-item">📈 Trends</div>
+        <div class="app-tab-item">⚙️ Settings</div>
+      </div>
+      <div class="app-body">
+
+        <!-- Mortgage (expanded) -->
+        <div class="mbill">
+          <div class="mbill-row">
+            <div class="mbill-left">
+              <div class="mbill-icon" style="background:rgba(245,168,0,0.14);">🏠</div>
+              <div>
+                <div class="mbill-name">Mortgage</div>
+                <div class="mbill-sub">% split · auto-carry</div>
+              </div>
+            </div>
+            <div>
+              <div class="mbill-total">$2,450.00</div>
+              <div class="mbill-share">my share $1,225</div>
+            </div>
+            <div class="mbill-tag">50% mine</div>
+            <div class="mbill-btn">▲</div>
+          </div>
+          <div class="mbill-body">
+            <div class="mbill-lhd"><div>Person</div><div style="text-align:right">%</div><div style="text-align:right">Amount</div></div>
+            <div class="mbill-line">
+              <div class="mpersontag"><div class="mdot" style="background:var(--amber)"></div> Me</div>
+              <div class="mpct">50%</div>
+              <div class="mamt" style="color:var(--amber)">$1,225.00</div>
+            </div>
+            <div class="mbill-line">
+              <div class="mpersontag"><div class="mdot" style="background:var(--blue)"></div> Wife</div>
+              <div class="mpct">50%</div>
+              <div class="mamt" style="color:var(--blue)">$1,225.00</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Verizon (collapsed) -->
+        <div class="mbill">
+          <div class="mbill-row">
+            <div class="mbill-left">
+              <div class="mbill-icon" style="background:rgba(240,98,146,0.14);">📱</div>
+              <div>
+                <div class="mbill-name">Verizon</div>
+                <div class="mbill-sub">fixed split · 4 lines</div>
+              </div>
+            </div>
+            <div>
+              <div class="mbill-total">$320.00</div>
+              <div class="mbill-share">my share $80</div>
+            </div>
+            <div class="mbill-tag">4 people</div>
+            <div class="mbill-btn" style="color:var(--amber)">▼</div>
+          </div>
+        </div>
+
+        <!-- Electric (collapsed) -->
+        <div class="mbill">
+          <div class="mbill-row">
+            <div class="mbill-left">
+              <div class="mbill-icon" style="background:rgba(255,213,79,0.14);">⚡</div>
+              <div>
+                <div class="mbill-name">Electric</div>
+                <div class="mbill-sub">% split · 3 lines</div>
+              </div>
+            </div>
+            <div>
+              <div class="mbill-total">$185.00</div>
+              <div class="mbill-share">my share $55.50</div>
+            </div>
+            <div class="mbill-tag">30% mine</div>
+            <div class="mbill-btn">▼</div>
+          </div>
+        </div>
+
+        <!-- Summary cards -->
+        <div class="msum-row">
+          <div class="msum-card ca">
+            <div class="msum-name">Wife</div>
+            <div class="msum-val" style="color:var(--amber)">$1,287</div>
+            <div class="msum-det">Mortgage · Electric · Verizon</div>
+          </div>
+          <div class="msum-card co">
+            <div class="msum-name">Dad</div>
+            <div class="msum-val" style="color:var(--orange)">$387</div>
+            <div class="msum-det">Electric · Verizon (covers Mom)</div>
+          </div>
+          <div class="msum-card cp">
+            <div class="msum-name">Mom</div>
+            <div class="msum-val" style="color:var(--purple)">$0</div>
+            <div class="msum-det">Covered by Dad · Verizon</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SETUP ═══════ -->
+<section id="setup" style="position:relative;overflow:hidden;">
+  <div class="hex-stamp" style="width:260px;height:260px;top:60px;left:-80px;"></div>
+  <div class="hex-stamp" style="width:400px;height:400px;bottom:-120px;right:-100px;"></div>
+  <div class="wrap">
+    <div class="setup-grid">
+      <div>
+        <div class="section-kicker reveal">Self-Host</div>
+        <h2 class="section-h reveal d1">Deploy in minutes</h2>
+        <p class="section-p reveal d2" style="margin-bottom:0">BillHive ships as a single Docker image. No external database, no Redis, no cloud services. One command and you're running.</p>
+        <div class="setup-steps-list">
+          <div class="setup-step reveal d2">
+            <div class="setup-step-hex">1</div>
+            <div class="setup-step-body">
+              <h4>Pull and run the container</h4>
+              <p>The image is published to GitHub Container Registry. A named volume persists your SQLite database across restarts.</p>
+            </div>
+          </div>
+          <div class="setup-step reveal d3">
+            <div class="setup-step-hex">2</div>
+            <div class="setup-step-body">
+              <h4>Open in your browser</h4>
+              <p>Navigate to <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--amber)">http://localhost:8080</span>. The app loads instantly — no login, no setup wizard.</p>
+            </div>
+          </div>
+          <div class="setup-step reveal d4">
+            <div class="setup-step-hex">3</div>
+            <div class="setup-step-body">
+              <h4>Add people, add bills, done</h4>
+              <p>Configure your household members and recurring bills in Settings. Start entering monthly amounts immediately.</p>
+            </div>
+          </div>
+        </div>
+        <div class="setup-note reveal d5">
+          <strong>Multi-user?</strong> Deploy behind <strong>Authelia</strong> or <strong>Authentik</strong>. BillHive reads the <code style="font-family:'DM Mono',monospace;font-size:11px">Remote-User</code> header and automatically scopes all data per user — safe for a shared household server.
+        </div>
+      </div>
+
+      <div>
+        <div class="code-panel reveal d2">
+          <div class="code-panel-bar">
+            <div class="code-panel-bar-title">Docker Run</div>
+            <div class="code-panel-tag">latest</div>
+          </div>
+          <div class="code-body">
+            <div class="c-cmt"># Pull and run BillHive</div>
+            <div><span class="c-cmd">docker run</span> <span class="c-flg">-d</span> \</div>
+            <div>&nbsp;&nbsp;<span class="c-flg">--name</span> <span class="c-val">billhive</span> \</div>
+            <div>&nbsp;&nbsp;<span class="c-flg">-p</span> <span class="c-str">8080:8080</span> \</div>
+            <div>&nbsp;&nbsp;<span class="c-flg">-v</span> <span class="c-val">billhive-data</span><span class="c-str">:/data</span> \</div>
+            <div>&nbsp;&nbsp;<span class="c-val">ghcr.io/martyportatoes/billflow:latest</span></div>
+          </div>
+          <hr class="code-panel-sep">
+          <div class="code-panel-bar" style="background:transparent;border-bottom:none;padding-bottom:0;">
+            <div class="code-panel-bar-title">docker-compose.yml</div>
+          </div>
+          <div class="code-body-sm">
+            <div class="c-cmt">services:</div>
+            <div>&nbsp;&nbsp;<span class="c-cmd">billhive:</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-flg">image:</span> <span class="c-val">ghcr.io/martyportatoes/billflow:latest</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-flg">ports:</span> [<span class="c-str">"8080:8080"</span>]</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-flg">volumes:</span> [<span class="c-str">billhive-data:/data</span>]</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-flg">restart:</span> <span class="c-val">unless-stopped</span></div>
+          </div>
+        </div>
+
+        <div class="tech-pills reveal d3">
+          <span class="tech-pill">Node.js 20</span>
+          <span class="tech-pill">SQLite WAL</span>
+          <span class="tech-pill">Express 4</span>
+          <span class="tech-pill">Vanilla JS</span>
+          <span class="tech-pill">Alpine Linux</span>
+          <span class="tech-pill amber">~50MB image</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <a href="#" class="nav-logo" style="display:inline-flex;">
+          <div class="nav-hexmark">
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+              <rect x="1" y="2" width="8" height="2" rx="1" fill="#0c0d0f"/>
+              <rect x="1" y="6" width="12" height="2" rx="1" fill="#0c0d0f"/>
+              <rect x="1" y="10" width="6" height="2" rx="1" fill="#0c0d0f"/>
+            </svg>
+          </div>
+          <div class="nav-name">Bill<span>Hive</span></div>
+        </a>
+        <p class="footer-brand-desc">Self-hosted household bill management. Track splits, send emails, collect reimbursements — all on your own server.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Project</div>
+        <div class="footer-col-links">
+          <a href="https://github.com/martyportatoes/billflow" target="_blank">GitHub Repository</a>
+          <a href="https://github.com/martyportatoes/billflow/releases" target="_blank">Releases</a>
+          <a href="#setup">Self-Host Guide</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Features</div>
+        <div class="footer-col-links">
+          <a href="#features">Bill Splitting</a>
+          <a href="#features">Email Summaries</a>
+          <a href="#features">Payment Links</a>
+          <a href="#features">Trends &amp; History</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-badge">Open source · Self-hosted · No subscription</div>
+      <span style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;">BILLHIVE · MIT LICENSE</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ─── Honeycomb canvas ──────────────────────────────────
+(function() {
+  const canvas = document.getElementById('hive-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function hexPath(cx, cy, r) {
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const a = (Math.PI / 180) * (60 * i - 30);
+      const x = cx + r * Math.cos(a);
+      const y = cy + r * Math.sin(a);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+  }
+
+  function draw() {
+    const W = canvas.offsetWidth;
+    const H = canvas.offsetHeight;
+    canvas.width  = W;
+    canvas.height = H;
+    ctx.clearRect(0, 0, W, H);
+
+    const R = 38;          // hex radius
+    const col = R * 2;
+    const row = R * Math.sqrt(3);
+
+    // Radial fade mask: bright at center-right (where the visual is), fades to edges
+    const cx = W * 0.72, cy = H * 0.5;
+
+    for (let c = -1; c < Math.ceil(W / col) + 2; c++) {
+      for (let r = -1; r < Math.ceil(H / row) + 2; r++) {
+        const x = c * col * 0.75;
+        const y = r * row + (c % 2 === 0 ? 0 : row / 2);
+        const dx = x - cx, dy = y - cy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const maxDist = Math.sqrt(W * W + H * H) * 0.42;
+        const alpha = Math.max(0, 1 - dist / maxDist);
+        if (alpha < 0.005) continue;
+
+        // Stroke hex
+        hexPath(x, y, R - 2);
+        ctx.strokeStyle = `rgba(245,168,0,${(alpha * 0.13).toFixed(3)})`;
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+
+        // Occasional filled accent hex near center
+        if (alpha > 0.55 && Math.abs(dx) < R * 3 && Math.abs(dy) < R * 3) {
+          hexPath(x, y, R - 2);
+          ctx.fillStyle = `rgba(245,168,0,${(alpha * 0.04).toFixed(3)})`;
+          ctx.fill();
+        }
+      }
+    }
+  }
+
+  draw();
+  window.addEventListener('resize', draw, { passive: true });
+})();
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Hero reveals immediately
+document.querySelectorAll('#hero .reveal').forEach(el => el.classList.add('in'));
+
+// Nav border on scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('main-nav').style.borderBottomColor =
+    window.scrollY > 60 ? 'rgba(245,168,0,0.12)' : 'rgba(245,168,0,0.07)';
+}, { passive: true });
+</script>
+</body>
+</html>
