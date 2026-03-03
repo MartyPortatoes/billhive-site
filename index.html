@@ -585,26 +585,6 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 #ios { padding: 100px 0; border-top: 1px solid var(--border); position: relative; overflow: hidden; }
 .ios-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
 .ios-phone-wrap { display: flex; justify-content: center; }
-.ios-phone {
-  width: 210px; background: var(--surface2); border-radius: 42px;
-  border: 2px solid var(--border2); padding: 14px;
-  box-shadow: 0 0 0 6px var(--surface3), 0 40px 80px rgba(0,0,0,0.6);
-}
-.ios-notch { width: 68px; height: 22px; background: var(--surface3); border-radius: 0 0 16px 16px; margin: 0 auto 10px; }
-.ios-screen { background: var(--bg); border-radius: 28px; overflow: hidden; }
-.ios-screen-nav { padding: 10px 10px 0; }
-.ios-screen-title { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; color: var(--text); padding: 0 2px 6px; }
-.ios-tab-bar { display: flex; gap: 1px; background: var(--border); }
-.ios-tab { flex: 1; padding: 6px 2px; text-align: center; font-size: 7px; font-family: 'DM Mono', monospace; color: var(--muted); background: var(--surface2); }
-.ios-tab.on { color: var(--amber); background: var(--surface); }
-.ios-content { padding: 10px 10px 14px; }
-.ios-bill-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; }
-.ios-bill-row { display: flex; align-items: center; gap: 7px; padding: 9px 10px; }
-.ios-bill-icon { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
-.ios-bill-name { font-family: 'DM Mono', monospace; font-size: 8.5px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); }
-.ios-bill-sub  { font-family: 'DM Mono', monospace; font-size: 7px; color: var(--muted); margin-top: 1px; }
-.ios-bill-amt  { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 600; color: var(--amber); margin-left: auto; }
-.ios-chevron   { font-size: 8px; color: var(--muted2); margin-left: 4px; }
 .ios-features-list { list-style: none; padding: 0; margin: 24px 0 32px; }
 .ios-features-list li { display: flex; align-items: flex-start; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--muted); line-height: 1.5; }
 .ios-features-list li::before { content: '◆'; color: var(--amber); font-size: 7px; margin-top: 7px; flex-shrink: 0; }
@@ -966,56 +946,8 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
     <div class="ios-grid">
 
       <div class="ios-phone-wrap reveal d1">
-        <div class="ios-phone">
-          <div class="ios-notch"></div>
-          <div class="ios-screen">
-            <div class="ios-screen-nav">
-              <div class="ios-screen-title">Bills</div>
-            </div>
-            <div class="ios-tab-bar">
-              <div class="ios-tab on">📋<br>Bills</div>
-              <div class="ios-tab">💰<br>Summary</div>
-              <div class="ios-tab">📤<br>Send</div>
-              <div class="ios-tab">📈<br>Trends</div>
-              <div class="ios-tab">⚙️<br>Settings</div>
-            </div>
-            <div class="ios-content">
-              <div class="ios-bill-card">
-                <div class="ios-bill-row">
-                  <div class="ios-bill-icon" style="background:rgba(245,168,0,0.14);">🏠</div>
-                  <div>
-                    <div class="ios-bill-name">Mortgage</div>
-                    <div class="ios-bill-sub">% split · auto-carry</div>
-                  </div>
-                  <div class="ios-bill-amt">$2,450</div>
-                  <div class="ios-chevron">▼</div>
-                </div>
-              </div>
-              <div class="ios-bill-card">
-                <div class="ios-bill-row">
-                  <div class="ios-bill-icon" style="background:rgba(240,98,146,0.14);">📱</div>
-                  <div>
-                    <div class="ios-bill-name">Verizon</div>
-                    <div class="ios-bill-sub">fixed · 4 lines</div>
-                  </div>
-                  <div class="ios-bill-amt">$320</div>
-                  <div class="ios-chevron">▶</div>
-                </div>
-              </div>
-              <div class="ios-bill-card">
-                <div class="ios-bill-row">
-                  <div class="ios-bill-icon" style="background:rgba(255,213,79,0.14);">⚡</div>
-                  <div>
-                    <div class="ios-bill-name">Electric</div>
-                    <div class="ios-bill-sub">% split · 3 lines</div>
-                  </div>
-                  <div class="ios-bill-amt">$185</div>
-                  <div class="ios-chevron">▶</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <img src="ios-screenshot.png" alt="BillHive iOS app — Bills tab"
+             style="width:260px;border-radius:40px;box-shadow:0 0 0 1px var(--border2), 0 40px 80px rgba(0,0,0,0.7);">
       </div>
 
       <div>
