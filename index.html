@@ -580,6 +580,36 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 .d5 { transition-delay: 0.5s; }
 
 /* ══════════════════════════════════════════════
+   iOS SECTION
+══════════════════════════════════════════════ */
+#ios { padding: 100px 0; border-top: 1px solid var(--border); position: relative; overflow: hidden; }
+.ios-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.ios-phone-wrap { display: flex; justify-content: center; }
+.ios-phone {
+  width: 210px; background: var(--surface2); border-radius: 42px;
+  border: 2px solid var(--border2); padding: 14px;
+  box-shadow: 0 0 0 6px var(--surface3), 0 40px 80px rgba(0,0,0,0.6);
+}
+.ios-notch { width: 68px; height: 22px; background: var(--surface3); border-radius: 0 0 16px 16px; margin: 0 auto 10px; }
+.ios-screen { background: var(--bg); border-radius: 28px; overflow: hidden; }
+.ios-screen-nav { padding: 10px 10px 0; }
+.ios-screen-title { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; color: var(--text); padding: 0 2px 6px; }
+.ios-tab-bar { display: flex; gap: 1px; background: var(--border); }
+.ios-tab { flex: 1; padding: 6px 2px; text-align: center; font-size: 7px; font-family: 'DM Mono', monospace; color: var(--muted); background: var(--surface2); }
+.ios-tab.on { color: var(--amber); background: var(--surface); }
+.ios-content { padding: 10px 10px 14px; }
+.ios-bill-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; }
+.ios-bill-row { display: flex; align-items: center; gap: 7px; padding: 9px 10px; }
+.ios-bill-icon { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+.ios-bill-name { font-family: 'DM Mono', monospace; font-size: 8.5px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); }
+.ios-bill-sub  { font-family: 'DM Mono', monospace; font-size: 7px; color: var(--muted); margin-top: 1px; }
+.ios-bill-amt  { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 600; color: var(--amber); margin-left: auto; }
+.ios-chevron   { font-size: 8px; color: var(--muted2); margin-left: 4px; }
+.ios-features-list { list-style: none; padding: 0; margin: 24px 0 32px; }
+.ios-features-list li { display: flex; align-items: flex-start; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--muted); line-height: 1.5; }
+.ios-features-list li::before { content: '◆'; color: var(--amber); font-size: 7px; margin-top: 7px; flex-shrink: 0; }
+
+/* ══════════════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════════════ */
 @media (max-width: 920px) {
@@ -588,6 +618,8 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   .steps-grid { grid-template-columns: repeat(2,1fr); }
   .feat-grid  { grid-template-columns: 1fr 1fr; }
   .setup-grid { grid-template-columns: 1fr; gap: 40px; }
+  .ios-grid   { grid-template-columns: 1fr; }
+  .ios-phone-wrap { display: none; }
   .stats-row  { grid-template-columns: repeat(2,1fr); }
   .footer-top { flex-direction: column; }
   .msum-row   { grid-template-columns: 1fr; }
@@ -621,6 +653,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
     <a href="#how">How It Works</a>
     <a href="#features">Features</a>
     <a href="#preview">Preview</a>
+    <a href="#ios">iOS App</a>
     <a href="#setup">Self-Host</a>
   </div>
   <a href="#setup" class="btn-nav">Self-Host →</a>
@@ -655,6 +688,10 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
           <a href="https://github.com/martyportatoes/billflow" class="btn-s" target="_blank">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
             View on GitHub
+          </a>
+          <a href="#ios" class="btn-s">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="9" y1="7" x2="15" y2="7"/><circle cx="12" cy="17" r="1"/></svg>
+            iOS Companion
           </a>
         </div>
       </div>
@@ -922,6 +959,86 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   </div>
 </section>
 
+<!-- ═══════ iOS ═══════ -->
+<section id="ios">
+  <div class="hex-stamp" style="width:280px;height:280px;top:-60px;right:-60px;"></div>
+  <div class="wrap">
+    <div class="ios-grid">
+
+      <div class="ios-phone-wrap reveal d1">
+        <div class="ios-phone">
+          <div class="ios-notch"></div>
+          <div class="ios-screen">
+            <div class="ios-screen-nav">
+              <div class="ios-screen-title">Bills</div>
+            </div>
+            <div class="ios-tab-bar">
+              <div class="ios-tab on">📋<br>Bills</div>
+              <div class="ios-tab">💰<br>Summary</div>
+              <div class="ios-tab">📤<br>Send</div>
+              <div class="ios-tab">📈<br>Trends</div>
+              <div class="ios-tab">⚙️<br>Settings</div>
+            </div>
+            <div class="ios-content">
+              <div class="ios-bill-card">
+                <div class="ios-bill-row">
+                  <div class="ios-bill-icon" style="background:rgba(245,168,0,0.14);">🏠</div>
+                  <div>
+                    <div class="ios-bill-name">Mortgage</div>
+                    <div class="ios-bill-sub">% split · auto-carry</div>
+                  </div>
+                  <div class="ios-bill-amt">$2,450</div>
+                  <div class="ios-chevron">▼</div>
+                </div>
+              </div>
+              <div class="ios-bill-card">
+                <div class="ios-bill-row">
+                  <div class="ios-bill-icon" style="background:rgba(240,98,146,0.14);">📱</div>
+                  <div>
+                    <div class="ios-bill-name">Verizon</div>
+                    <div class="ios-bill-sub">fixed · 4 lines</div>
+                  </div>
+                  <div class="ios-bill-amt">$320</div>
+                  <div class="ios-chevron">▶</div>
+                </div>
+              </div>
+              <div class="ios-bill-card">
+                <div class="ios-bill-row">
+                  <div class="ios-bill-icon" style="background:rgba(255,213,79,0.14);">⚡</div>
+                  <div>
+                    <div class="ios-bill-name">Electric</div>
+                    <div class="ios-bill-sub">% split · 3 lines</div>
+                  </div>
+                  <div class="ios-bill-amt">$185</div>
+                  <div class="ios-chevron">▶</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-kicker reveal">iOS Companion</div>
+        <h2 class="section-h reveal d1">BillHive in your pocket</h2>
+        <p class="section-p reveal d2">The native iOS companion app connects directly to your self-hosted BillHive server. Same data, same splits, same email summaries — from your iPhone.</p>
+        <ul class="ios-features-list reveal d3">
+          <li>All five tabs — Bills, Summary, Send &amp; Receive, Trends, Settings</li>
+          <li>Enter amounts and see splits update live as you type</li>
+          <li>Send HTML email summaries with one tap</li>
+          <li>Edit bill name, icon, and accent color directly in each card</li>
+          <li>Connects to your server URL — your data never leaves your hardware</li>
+        </ul>
+        <a href="https://github.com/martyportatoes/billhive-ios" class="btn-s reveal d4" target="_blank">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- ═══════ SETUP ═══════ -->
 <section id="setup" style="position:relative;overflow:hidden;">
   <div class="hex-stamp" style="width:260px;height:260px;top:60px;left:-80px;"></div>
@@ -1022,6 +1139,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
         <div class="footer-col-title">Project</div>
         <div class="footer-col-links">
           <a href="https://github.com/martyportatoes/billflow" target="_blank">GitHub Repository</a>
+          <a href="https://github.com/martyportatoes/billhive-ios" target="_blank">iOS App</a>
           <a href="https://github.com/martyportatoes/billflow/releases" target="_blank">Releases</a>
           <a href="#setup">Self-Host Guide</a>
         </div>
