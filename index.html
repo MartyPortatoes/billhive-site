@@ -108,12 +108,7 @@ nav {
   transition: border-color 0.3s;
 }
 .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
-.nav-hexmark {
-  width: 26px; height: 26px;
-  clip-path: polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
-  background: var(--amber);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
+.nav-hexmark { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .nav-hexmark svg { display: block; }
 .nav-name {
   font-family: 'Syncopate', sans-serif;
@@ -621,10 +616,12 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 <nav id="main-nav">
   <a href="#" class="nav-logo">
     <div class="nav-hexmark">
-      <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-        <rect x="3" y="2" width="8" height="2" rx="1" fill="#0c0d0f"/>
-        <rect x="1" y="6" width="12" height="2" rx="1" fill="#0c0d0f"/>
-        <rect x="2" y="10" width="10" height="2" rx="1" fill="#0c0d0f"/>
+      <svg width="22" height="25" viewBox="0 0 22 25" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="11,0 21.8,6.25 21.8,18.75 11,25 0.2,18.75 0.2,6.25" fill="#F5A800"/>
+        <polygon points="11,3.75 18.6,8.125 18.6,16.875 11,21.25 3.4,16.875 3.4,8.125" fill="#0e0e0e"/>
+        <rect x="6.5" y="9.4" width="9" height="2" rx="1" fill="#F5A800"/>
+        <rect x="5" y="12.5" width="12" height="2" rx="1" fill="#F5A800"/>
+        <rect x="6" y="15.6" width="10" height="2" rx="1" fill="#F5A800"/>
       </svg>
     </div>
     <div class="nav-name">Bill<span>Hive</span></div>
@@ -1057,10 +1054,12 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
       <div>
         <a href="#" class="nav-logo" style="display:inline-flex;">
           <div class="nav-hexmark">
-            <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-              <rect x="3" y="2" width="8" height="2" rx="1" fill="#0c0d0f"/>
-              <rect x="1" y="6" width="12" height="2" rx="1" fill="#0c0d0f"/>
-              <rect x="2" y="10" width="10" height="2" rx="1" fill="#0c0d0f"/>
+            <svg width="22" height="25" viewBox="0 0 22 25" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="11,0 21.8,6.25 21.8,18.75 11,25 0.2,18.75 0.2,6.25" fill="#F5A800"/>
+              <polygon points="11,3.75 18.6,8.125 18.6,16.875 11,21.25 3.4,16.875 3.4,8.125" fill="#0e0e0e"/>
+              <rect x="6.5" y="9.4" width="9" height="2" rx="1" fill="#F5A800"/>
+              <rect x="5" y="12.5" width="12" height="2" rx="1" fill="#F5A800"/>
+              <rect x="6" y="15.6" width="10" height="2" rx="1" fill="#F5A800"/>
             </svg>
           </div>
           <div class="nav-name">Bill<span>Hive</span></div>
