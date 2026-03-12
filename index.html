@@ -570,8 +570,44 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
    iOS SECTION
 ══════════════════════════════════════════════ */
 #ios { padding: 100px 0; border-top: 1px solid var(--border); position: relative; overflow: hidden; }
-.ios-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-.ios-phone-wrap { display: flex; justify-content: center; }
+.ios-intro { max-width: 600px; margin-bottom: 56px; }
+.ios-variants { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 56px; }
+.ios-variant-card {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 16px; padding: 32px;
+  display: flex; flex-direction: column; gap: 0;
+  transition: border-color 0.2s;
+}
+.ios-variant-card:hover { border-color: rgba(245,168,0,0.35); }
+.ios-variant-card.primary { border-color: rgba(245,168,0,0.2); }
+.ios-variant-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.ios-variant-icon {
+  width: 52px; height: 52px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ios-variant-icon.dark { background: #111108; }
+.ios-variant-icon.light { background: #f5f0e8; }
+.ios-variant-name { font-family: 'Syncopate', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.02em; color: var(--text); line-height: 1.2; }
+.ios-variant-tag {
+  display: inline-block; margin-top: 5px;
+  font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 4px;
+}
+.ios-variant-tag.standalone { background: rgba(168,224,99,0.1); color: #a8e063; }
+.ios-variant-tag.connected  { background: rgba(245,168,0,0.1);  color: var(--amber); }
+.ios-variant-desc { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 20px; }
+.ios-variant-features { list-style: none; padding: 0; margin: 0 0 28px; flex: 1; }
+.ios-variant-features li { display: flex; align-items: flex-start; gap: 9px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted); line-height: 1.5; }
+.ios-variant-features li:last-child { border-bottom: none; }
+.ios-variant-features li::before { content: '◆'; color: var(--amber); font-size: 6px; margin-top: 6px; flex-shrink: 0; }
+.ios-variant-cta { margin-top: auto; }
+.ios-shared { margin-bottom: 40px; }
+.ios-shared-title { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+.ios-shared-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.ios-shared-pill { font-size: 12px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; }
+.ios-phone-wrap { display: flex; justify-content: center; margin-top: 16px; }
+/* legacy list kept for compat */
 .ios-features-list { list-style: none; padding: 0; margin: 24px 0 32px; }
 .ios-features-list li { display: flex; align-items: flex-start; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--muted); line-height: 1.5; }
 .ios-features-list li::before { content: '◆'; color: var(--amber); font-size: 7px; margin-top: 7px; flex-shrink: 0; }
@@ -585,7 +621,8 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   .steps-grid { grid-template-columns: repeat(2,1fr); }
   .feat-grid  { grid-template-columns: 1fr 1fr; }
   .setup-grid { grid-template-columns: 1fr; gap: 40px; }
-  .ios-grid   { grid-template-columns: 1fr; }
+  .ios-grid     { grid-template-columns: 1fr; }
+  .ios-variants { grid-template-columns: 1fr; }
   .ios-phone-wrap { display: none; }
   .stats-row  { grid-template-columns: repeat(2,1fr); }
   .footer-top { flex-direction: column; }
@@ -950,31 +987,112 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 <section id="ios">
   <div class="hex-stamp" style="width:280px;height:280px;top:-60px;right:-60px;"></div>
   <div class="wrap">
-    <div class="ios-grid">
 
-      <div class="ios-phone-wrap reveal d1">
-        <img src="ios-screenshot.png" alt="BillHive iOS app — Bills tab"
-             style="width:260px;border-radius:40px;box-shadow:0 0 0 1px var(--border2), 0 40px 80px rgba(0,0,0,0.7);">
+    <div class="ios-intro">
+      <div class="section-kicker reveal">iOS Companion</div>
+      <h2 class="section-h reveal d1">BillHive on your iPhone — two ways</h2>
+      <p class="section-p reveal d2">The same native app, two different builds. Choose based on how you want to store your data: locally on-device, or on your self-hosted server.</p>
+    </div>
+
+    <div class="ios-variants reveal d2">
+
+      <!-- BillHive — Standalone -->
+      <div class="ios-variant-card primary">
+        <div class="ios-variant-head">
+          <div class="ios-variant-icon dark">
+            <svg width="32" height="37" viewBox="0 0 32 37" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="viA1" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#FFD000"/><stop offset="100%" stop-color="#D4890A"/>
+                </linearGradient>
+              </defs>
+              <polygon points="16,0 32,9.25 32,27.75 16,37 0,27.75 0,9.25" fill="url(#viA1)"/>
+              <polygon points="16,5.5 27.2,12 27.2,25 16,31.5 4.8,25 4.8,12" fill="#0e0e0e"/>
+              <rect x="9.5" y="14" width="13" height="3" rx="1.5" fill="url(#viA1)"/>
+              <rect x="8" y="19.5" width="16" height="3" rx="1.5" fill="url(#viA1)"/>
+              <rect x="9" y="25" width="14" height="3" rx="1.5" fill="url(#viA1)"/>
+            </svg>
+          </div>
+          <div>
+            <div class="ios-variant-name">BillHive</div>
+            <span class="ios-variant-tag standalone">Standalone</span>
+          </div>
+        </div>
+        <p class="ios-variant-desc">Fully self-contained — no server required. Your data lives entirely on your iPhone. Great for personal use or anyone who prefers to skip the server setup.</p>
+        <ul class="ios-variant-features">
+          <li>Data stored locally on-device — nothing leaves your phone</li>
+          <li>No server URL, no Docker, no setup required</li>
+          <li>Sends emails via iOS Mail (your existing mail account)</li>
+          <li>Works completely offline</li>
+          <li>All five tabs — Bills, Summary, Send &amp; Receive, Trends, Settings</li>
+        </ul>
+        <div class="ios-variant-cta">
+          <a href="https://github.com/martyportatoes/billhive-ios" class="btn-s" target="_blank" style="font-size:13px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            View on GitHub
+          </a>
+        </div>
       </div>
 
-      <div>
-        <div class="section-kicker reveal">iOS Companion</div>
-        <h2 class="section-h reveal d1">BillHive in your pocket</h2>
-        <p class="section-p reveal d2">The native iOS companion app connects directly to your self-hosted BillHive server. Same data, same splits, same email summaries — from your iPhone.</p>
-        <ul class="ios-features-list reveal d3">
+      <!-- SelfHive — Server Connected -->
+      <div class="ios-variant-card">
+        <div class="ios-variant-head">
+          <div class="ios-variant-icon light">
+            <svg width="32" height="37" viewBox="0 0 32 37" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="viA2" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#FFD000"/><stop offset="100%" stop-color="#D4890A"/>
+                </linearGradient>
+              </defs>
+              <polygon points="16,0 32,9.25 32,27.75 16,37 0,27.75 0,9.25" fill="url(#viA2)"/>
+              <polygon points="16,5.5 27.2,12 27.2,25 16,31.5 4.8,25 4.8,12" fill="#f5f0e8"/>
+              <rect x="9.5" y="14" width="13" height="3" rx="1.5" fill="url(#viA2)"/>
+              <rect x="8" y="19.5" width="16" height="3" rx="1.5" fill="url(#viA2)"/>
+              <rect x="9" y="25" width="14" height="3" rx="1.5" fill="url(#viA2)"/>
+            </svg>
+          </div>
+          <div>
+            <div class="ios-variant-name">SelfHive</div>
+            <span class="ios-variant-tag connected">Server Connected</span>
+          </div>
+        </div>
+        <p class="ios-variant-desc">A companion to your self-hosted BillHive server. Your data lives on your server and syncs with the web app — the iOS app is just another window into it.</p>
+        <ul class="ios-variant-features">
+          <li>Connects directly to your BillHive server via URL</li>
+          <li>Data syncs between web app and iPhone in real time</li>
+          <li>Sends rich HTML emails via your server's relay (Mailgun, SendGrid, SMTP)</li>
+          <li>Requires BillHive server to be running and reachable</li>
           <li>All five tabs — Bills, Summary, Send &amp; Receive, Trends, Settings</li>
-          <li>Enter amounts and see splits update live as you type</li>
-          <li>Send HTML email summaries with one tap</li>
-          <li>Edit bill name, icon, and accent color directly in each card</li>
-          <li>Connects to your server URL — your data never leaves your hardware</li>
         </ul>
-        <a href="https://github.com/martyportatoes/billhive-ios" class="btn-s reveal d4" target="_blank">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          View on GitHub
-        </a>
+        <div class="ios-variant-cta">
+          <a href="https://github.com/martyportatoes/billhive-ios" class="btn-s" target="_blank" style="font-size:13px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            View on GitHub
+          </a>
+        </div>
       </div>
 
     </div>
+
+    <!-- Shared features -->
+    <div class="ios-shared reveal d3">
+      <div class="ios-shared-title">Both versions include</div>
+      <div class="ios-shared-pills">
+        <span class="ios-shared-pill">Live split calculation</span>
+        <span class="ios-shared-pill">All 5 tabs</span>
+        <span class="ios-shared-pill">Zelle &amp; Venmo deep-links</span>
+        <span class="ios-shared-pill">Month-over-month trends</span>
+        <span class="ios-shared-pill">Bill preserve / auto-fill</span>
+        <span class="ios-shared-pill">Coverage tracking</span>
+        <span class="ios-shared-pill">Import &amp; export</span>
+      </div>
+    </div>
+
+    <div class="ios-phone-wrap reveal d4">
+      <img src="ios-screenshot.png" alt="BillHive iOS app — Bills tab"
+           style="width:260px;border-radius:40px;box-shadow:0 0 0 1px var(--border2), 0 40px 80px rgba(0,0,0,0.7);">
+    </div>
+
   </div>
 </section>
 
