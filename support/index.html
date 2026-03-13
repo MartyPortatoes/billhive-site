@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BillHive — Support</title>
+<meta name="description" content="Get help with BillHive. Contact support, report bugs, or browse frequently asked questions.">
+<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0c0d0f;
+  --surface: #141518;
+  --surface2:#1c1e22;
+  --border:  #2a2c31;
+  --border2: #34373d;
+  --text:    #e4e5e8;
+  --muted:   #767880;
+  --amber:   #F5A800;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background-color:var(--bg);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='150'%3E%3Cpath d='M42 99L0 75L0 24L42 0L84 24L84 75ZM42 150L0 126L0 102L42 78L84 102L84 126Z' fill='none' stroke='%23F5A800' stroke-opacity='0.04' stroke-width='0.5'/%3E%3C/svg%3E");
+  color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;min-height:100vh;line-height:1.6;
+}
+a{color:var(--amber);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* layout */
+.wrap{max-width:720px;margin:0 auto;padding:0 24px;}
+
+/* nav */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;max-width:720px;margin:0 auto;}
+.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.nav-name{font-family:'Syncopate',sans-serif;font-weight:700;font-size:15px;color:var(--text);}
+.nav-name span{color:var(--amber);}
+.nav-back{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.06em;}
+.nav-back:hover{color:var(--text);}
+
+/* hero */
+.hero{text-align:center;padding:60px 0 48px;}
+.hero h1{font-family:'Syncopate',sans-serif;font-weight:700;font-size:28px;margin-bottom:8px;}
+.hero h1 span{color:var(--amber);}
+.hero p{color:var(--muted);font-size:15px;font-weight:300;max-width:480px;margin:0 auto;}
+
+/* cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px 24px;margin-bottom:16px;}
+.card-icon{font-size:28px;margin-bottom:14px;}
+.card h2{
+  font-family:'DM Mono',monospace;font-size:12px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text);margin-bottom:10px;
+}
+.card p{font-size:13px;color:var(--muted);line-height:1.65;font-weight:300;}
+
+/* btn */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;padding:9px 16px;
+  border-radius:8px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;
+  cursor:pointer;border:1px solid var(--border);color:var(--text);
+  background:transparent;text-decoration:none;transition:all .15s;white-space:nowrap;
+  margin-top:12px;
+}
+.btn:hover{border-color:var(--amber);color:var(--amber);text-decoration:none;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+
+/* faq */
+.faq details{border-bottom:1px solid var(--border);padding:14px 0;}
+.faq details:last-child{border-bottom:none;}
+.faq summary{
+  font-family:'DM Mono',monospace;font-size:12px;font-weight:500;
+  color:var(--text);cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;
+}
+.faq summary::before{
+  content:'+';font-size:14px;color:var(--amber);font-weight:700;width:18px;flex-shrink:0;text-align:center;
+}
+.faq details[open] summary::before{content:'−';}
+.faq summary::-webkit-details-marker{display:none;}
+.faq details p{font-size:12px;color:var(--muted);line-height:1.65;font-weight:300;padding:8px 0 0 26px;}
+
+/* footer */
+.foot{text-align:center;padding:48px 0 32px;color:var(--muted);font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.06em;}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/" class="nav-logo">
+    <svg width="18" height="18" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="48.6,50 41.2,62.8 26.4,62.8 19,50 26.4,37.2 41.2,37.2" fill="#F5A800"/><polygon points="72.9,36 65.5,48.8 50.7,48.8 43.3,36 50.7,23.2 65.5,23.2" fill="#F5A800"/><polygon points="72.9,64 65.5,76.8 50.7,76.8 43.3,64 50.7,51.2 65.5,51.2" fill="#F5A800"/></svg>
+    <div class="nav-name">Bill<span>Hive</span></div>
+  </a>
+  <a href="/" class="nav-back">← Back to home</a>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <h1>Need <span>help</span>?</h1>
+    <p>BillHive is free, open-source software. Here's how to get support, report issues, or find answers.</p>
+  </div>
+
+  <!-- Email Support -->
+  <div class="card">
+    <div class="card-icon">📧</div>
+    <h2>Email Support</h2>
+    <p>For questions, feedback, or issues with the iOS app or self-hosted server, send an email and you'll hear back within a few days.</p>
+    <a href="mailto:billhive-support@mattp.me" class="btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,7 12,13 2,7"/></svg>
+      billhive-support@mattp.me
+    </a>
+  </div>
+
+  <!-- Report a Bug -->
+  <div class="card">
+    <div class="card-icon">🐛</div>
+    <h2>Report a Bug</h2>
+    <p>Found something broken? Open a GitHub Issue on the relevant repository. Include your device, OS version, and steps to reproduce.</p>
+    <div class="btn-row">
+      <a href="https://github.com/MartyPortatoes/BillHive/issues" class="btn" target="_blank">Web App Issues</a>
+      <a href="https://github.com/MartyPortatoes/BillHive-iOS/issues" class="btn" target="_blank">iOS App Issues</a>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="card">
+    <div class="card-icon">💬</div>
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Is BillHive really free?</summary>
+        <p>Yes. BillHive is open-source under the MIT license. There are no subscriptions, in-app purchases, or ads — ever.</p>
+      </details>
+      <details>
+        <summary>Do I need a server to use the iOS app?</summary>
+        <p>No. The standalone <strong>BillHive</strong> app stores all data locally on your iPhone. Only the <strong>SelfHive</strong> variant requires a self-hosted server.</p>
+      </details>
+      <details>
+        <summary>Where is my data stored?</summary>
+        <p>On the standalone iOS app, your data stays on your device in a local JSON file. On the self-hosted version, it's stored in a SQLite database on your server. Nothing is sent to any cloud service.</p>
+      </details>
+      <details>
+        <summary>How do I move data between devices?</summary>
+        <p>Use the Import/Export feature in Settings. Export creates a JSON backup you can transfer to another device or server instance.</p>
+      </details>
+      <details>
+        <summary>What payment methods are supported?</summary>
+        <p>BillHive generates payment deep-links for Zelle, Venmo, and Cash App. Each person can have a different preferred method configured in Settings.</p>
+      </details>
+      <details>
+        <summary>How do I delete my data?</summary>
+        <p>On the iOS app, go to Settings and use the "Clear All Data" option. On the self-hosted version, stop the container and remove the Docker volume. BillHive never stores data on any external server.</p>
+      </details>
+    </div>
+  </div>
+
+  <div class="foot">
+    <a href="/" style="color:var(--muted);">billhiveapp.com</a> · MIT License
+  </div>
+
+</div>
+
+</body>
+</html>

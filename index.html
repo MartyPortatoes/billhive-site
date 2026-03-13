@@ -518,6 +518,44 @@ h1.hero-title .h-hive { color: var(--amber); }
 }
 
 /* ══════════════════════════════════════════════
+   SUPPORT
+══════════════════════════════════════════════ */
+#support { padding: 80px 0; }
+.support-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 12px;
+}
+.support-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 28px 24px;
+}
+.support-icon { font-size: 28px; margin-bottom: 14px; }
+.support-t {
+  font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); margin-bottom: 10px;
+}
+.support-d { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+.support-faq { display: flex; flex-direction: column; gap: 0; }
+.support-faq details {
+  border-bottom: 1px solid var(--border); padding: 12px 0;
+}
+.support-faq details:last-child { border-bottom: none; }
+.support-faq summary {
+  font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500;
+  color: var(--text); cursor: pointer; list-style: none; display: flex;
+  align-items: center; gap: 8px;
+}
+.support-faq summary::before {
+  content: '+'; font-size: 14px; color: var(--amber); font-weight: 700;
+  width: 18px; flex-shrink: 0; text-align: center;
+}
+.support-faq details[open] summary::before { content: '−'; }
+.support-faq summary::-webkit-details-marker { display: none; }
+.support-faq details p {
+  font-size: 12px; color: var(--muted); line-height: 1.65; font-weight: 300;
+  padding: 8px 0 0 26px;
+}
+
+/* ══════════════════════════════════════════════
    FOOTER
 ══════════════════════════════════════════════ */
 footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
@@ -616,6 +654,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   .ios-phone-wrap { display: none; }
   .stats-row  { grid-template-columns: repeat(2,1fr); }
   .footer-top { flex-direction: column; }
+  .support-grid { grid-template-columns: 1fr; }
   .msum-row   { grid-template-columns: 1fr; }
   .mbill-row  { grid-template-columns: 1fr 90px 30px; }
   .mbill-tag  { display: none; }
@@ -649,6 +688,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
     <a href="#preview">Preview</a>
     <a href="#ios">iOS App</a>
     <a href="#setup">Self-Host</a>
+    <a href="#support">Support</a>
   </div>
   <a href="#ios" class="btn-nav">Get Started →</a>
 </nav>
@@ -1158,6 +1198,62 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   </div>
 </section>
 
+<!-- ═══════ SUPPORT ═══════ -->
+<section id="support">
+  <div class="wrap">
+    <div class="section-kicker reveal">Support</div>
+    <h2 class="section-h reveal d1">Need help?</h2>
+    <p class="section-p reveal d2">BillHive is free, open-source software maintained by one developer. Here's how to get help or report issues.</p>
+
+    <div class="support-grid">
+
+      <div class="support-card reveal">
+        <div class="support-icon">📧</div>
+        <h3 class="support-t">Email Support</h3>
+        <p class="support-d">For questions, feedback, or account issues with the iOS app, send an email and you'll hear back within a few days.</p>
+        <a href="mailto:billhive-support@mattp.me" class="btn-s" style="margin-top:12px;display:inline-flex;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,7 12,13 2,7"/></svg>
+          billhive-support@mattp.me
+        </a>
+      </div>
+
+      <div class="support-card reveal d1">
+        <div class="support-icon">🐛</div>
+        <h3 class="support-t">Report a Bug</h3>
+        <p class="support-d">Found something broken? Open a GitHub Issue on the relevant repository. Include your device, OS version, and steps to reproduce.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+          <a href="https://github.com/MartyPortatoes/BillHive/issues" class="btn-s" target="_blank" style="display:inline-flex;">Web App Issues</a>
+          <a href="https://github.com/MartyPortatoes/BillHive-iOS/issues" class="btn-s" target="_blank" style="display:inline-flex;">iOS App Issues</a>
+        </div>
+      </div>
+
+      <div class="support-card reveal d2">
+        <div class="support-icon">💬</div>
+        <h3 class="support-t">FAQ</h3>
+        <div class="support-faq">
+          <details>
+            <summary>Is BillHive really free?</summary>
+            <p>Yes. BillHive is open-source under the MIT license. There are no subscriptions, in-app purchases, or ads — ever.</p>
+          </details>
+          <details>
+            <summary>Do I need a server to use the iOS app?</summary>
+            <p>No. The standalone <strong>BillHive</strong> app stores all data locally on your iPhone. Only the <strong>SelfHive</strong> variant requires a self-hosted server.</p>
+          </details>
+          <details>
+            <summary>Where is my data stored?</summary>
+            <p>On the standalone iOS app, your data stays on your device in a local JSON file. On the self-hosted version, it's stored in a SQLite database on your server. Nothing is sent to any cloud service.</p>
+          </details>
+          <details>
+            <summary>How do I move data between devices?</summary>
+            <p>Use the Import/Export feature in Settings. Export creates a JSON backup you can transfer to another device or server instance.</p>
+          </details>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- ═══════ FOOTER ═══════ -->
 <footer>
   <div class="wrap">
@@ -1182,6 +1278,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
           <a href="https://github.com/martyportatoes/billhive-ios" target="_blank">iOS App</a>
           <a href="https://github.com/MartyPortatoes/BillHive/releases" target="_blank">Releases</a>
           <a href="#setup">Self-Host Guide</a>
+          <a href="#support">Support</a>
         </div>
       </div>
       <div>
