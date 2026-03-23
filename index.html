@@ -1,10 +1,51 @@
 <!DOCTYPE html>
+<!--
+  BillHive — Marketing & Landing Page
+  ====================================
+  Single-page site for billhiveapp.com. Showcases the BillHive household
+  bill-splitting tool (self-hosted web app + iOS companion apps).
+
+  Stack: Static HTML/CSS/JS, hosted on GitHub Pages.
+  Fonts: Syncopate (headings), DM Mono (UI/code), Outfit (body).
+  Design: Dark theme with amber (#F5A800) accent, hexagonal motif.
+
+  Sections:
+    #hero      — Value proposition, CTAs, animated hexagon visual
+    .stats     — Key metrics strip (Docker, providers, cost)
+    #how       — Four-step workflow walkthrough
+    #features  — Six feature cards (splitting, payments, email, etc.)
+    #preview   — Interactive browser-chrome mockup of the app UI
+    #ios       — iOS app variants (BillHive standalone vs SelfHive)
+    #setup     — Self-hosting instructions with Docker commands
+    #support   — Email, GitHub Issues, FAQ
+    footer     — Links, branding, license
+
+  Last reviewed: 2026-03-22
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BillHive — Your Household Bills. Handled.</title>
 <meta name="description" content="Self-hosted household bill management. Smart splitting, Zelle/Venmo/Cash App deep-links, HTML email summaries, and month-over-month trends. One Docker container.">
+<!-- Security: restrict resource origins; upgrade insecure requests -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://tools.applemediaservices.com data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<!-- Theme & branding -->
+<meta name="theme-color" content="#0c0d0f">
+<meta name="color-scheme" content="dark">
+<!-- Canonical URL -->
+<link rel="canonical" href="https://billhiveapp.com/">
+<!-- Open Graph (social sharing previews) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://billhiveapp.com/">
+<meta property="og:title" content="BillHive — Your Household Bills. Handled.">
+<meta property="og:description" content="Self-hosted household bill management. Smart splitting, Zelle/Venmo/Cash App deep-links, HTML email summaries, and month-over-month trends.">
+<meta property="og:site_name" content="BillHive">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BillHive — Your Household Bills. Handled.">
+<meta name="twitter:description" content="Self-hosted household bill management. Smart splitting, payment deep-links, and email summaries. One Docker container.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -666,12 +707,49 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   .hero-ctas { flex-direction: column; }
   .btn-p, .btn-s { justify-content: center; }
 }
+
+/* ══════════════════════════════════════════════
+   SKIP LINK — visible only on focus for keyboard users
+══════════════════════════════════════════════ */
+.skip-link {
+  position: fixed; top: -100%; left: 50%; transform: translateX(-50%);
+  z-index: 200; background: var(--amber); color: #0c0d0f;
+  padding: 10px 20px; border-radius: 0 0 8px 8px;
+  font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500;
+  text-decoration: none; transition: top 0.2s;
+}
+.skip-link:focus { top: 0; }
+
+/* ══════════════════════════════════════════════
+   FOCUS STYLES — visible ring for keyboard navigation
+══════════════════════════════════════════════ */
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+}
+/* Suppress default outline when using mouse */
+:focus:not(:focus-visible) { outline: none; }
+
+/* ══════════════════════════════════════════════
+   REDUCED MOTION — respect user preference
+══════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 </style>
 </head>
 <body>
 
+<!-- ═══════ SKIP LINK — keyboard users bypass nav ═══════ -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
 <!-- ═══════ NAV ═══════ -->
-<nav id="main-nav">
+<nav id="main-nav" aria-label="Primary navigation">
   <a href="#" class="nav-logo">
     <div class="nav-hexmark">
       <svg width="22" height="22" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -694,8 +772,9 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 </nav>
 
 <!-- ═══════ HERO ═══════ -->
+<main id="main-content">
 <section id="hero" style="position:relative;overflow:hidden;">
-  <canvas id="hive-canvas"></canvas>
+  <canvas id="hive-canvas" aria-hidden="true"></canvas>
   <div class="wrap">
     <div class="hero-grid">
 
@@ -723,14 +802,14 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
             Self-Host
           </a>
-          <a href="https://github.com/MartyPortatoes/BillHive" class="btn-s" target="_blank">
+          <a href="https://github.com/MartyPortatoes/BillHive" class="btn-s" target="_blank" rel="noopener noreferrer">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
             View on GitHub
           </a>
         </div>
       </div>
 
-      <div class="hero-visual">
+      <div class="hero-visual" aria-hidden="true">
         <div class="hv-wrap">
           <div class="hv-ring hv-ring-c"></div>
           <div class="hv-ring hv-ring-a"></div>
@@ -784,7 +863,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 </section>
 
 <!-- ═══════ STATS ═══════ -->
-<div class="stats-strip">
+<div class="stats-strip" role="region" aria-label="Key statistics">
   <div class="wrap">
     <div class="stats-row">
       <div class="stat-box reveal"><div class="stat-n">1</div><div class="stat-l">Docker container</div></div>
@@ -795,11 +874,11 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   </div>
 </div>
 
-<!-- ═══════ HOW IT WORKS ═══════ -->
-<section id="how">
+<!-- ═══════ HOW IT WORKS — four-step workflow ═══════ -->
+<section id="how" aria-labelledby="how-heading">
   <div class="wrap">
     <div class="section-kicker reveal">Process</div>
-    <h2 class="section-h reveal d1">How BillHive works</h2>
+    <h2 id="how-heading" class="section-h reveal d1">How BillHive works</h2>
     <p class="section-p reveal d2">From bill entry to payment collection in four steps. No SaaS account, no subscription — use it on your iPhone or self-host it.</p>
 
     <div class="steps-grid">
@@ -831,13 +910,13 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   </div>
 </section>
 
-<!-- ═══════ FEATURES ═══════ -->
-<section id="features" style="position:relative;overflow:hidden;">
-  <div class="hex-stamp" style="width:320px;height:320px;top:-80px;right:-60px;"></div>
-  <div class="hex-stamp" style="width:180px;height:180px;bottom:-40px;left:-30px;"></div>
+<!-- ═══════ FEATURES — six core capabilities ═══════ -->
+<section id="features" aria-labelledby="features-heading" style="position:relative;overflow:hidden;">
+  <div class="hex-stamp" aria-hidden="true" style="width:320px;height:320px;top:-80px;right:-60px;"></div>
+  <div class="hex-stamp" aria-hidden="true" style="width:180px;height:180px;bottom:-40px;left:-30px;"></div>
   <div class="wrap">
     <div class="section-kicker reveal">Features</div>
-    <h2 class="section-h reveal d1">Everything you need</h2>
+    <h2 id="features-heading" class="section-h reveal d1">Everything you need</h2>
     <p class="section-p reveal d2">Built for real households with real complexity. Flexible enough to handle any bill arrangement you can imagine.</p>
 
     <div class="feat-grid">
@@ -875,11 +954,11 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   </div>
 </section>
 
-<!-- ═══════ PREVIEW ═══════ -->
-<section id="preview">
+<!-- ═══════ PREVIEW — browser-chrome mockup of the app ═══════ -->
+<section id="preview" aria-labelledby="preview-heading">
   <div class="wrap">
     <div class="section-kicker reveal">App Preview</div>
-    <h2 class="section-h reveal d1">See it in action</h2>
+    <h2 id="preview-heading" class="section-h reveal d1">See it in action</h2>
     <p class="section-p reveal d2">The Bills tab — enter totals, see splits instantly across all household members. Every number updates live as you type.</p>
 
     <div class="browser-chrome reveal d2">
@@ -1009,14 +1088,14 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   </div>
 </section>
 
-<!-- ═══════ iOS ═══════ -->
-<section id="ios">
-  <div class="hex-stamp" style="width:280px;height:280px;top:-60px;right:-60px;"></div>
+<!-- ═══════ iOS — two app variants (BillHive + SelfHive) ═══════ -->
+<section id="ios" aria-labelledby="ios-heading">
+  <div class="hex-stamp" aria-hidden="true" style="width:280px;height:280px;top:-60px;right:-60px;"></div>
   <div class="wrap">
 
     <div class="ios-intro">
       <div class="section-kicker reveal">iOS Companion</div>
-      <h2 class="section-h reveal d1">BillHive on your iPhone — two ways</h2>
+      <h2 id="ios-heading" class="section-h reveal d1">BillHive on your iPhone — two ways</h2>
       <p class="section-p reveal d2">The same native app, two different builds. Choose based on how you want to store your data: locally on-device, or on your self-hosted server.</p>
     </div>
 
@@ -1054,7 +1133,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
           <li>All five tabs — Bills, Summary, Send &amp; Receive, Trends, Settings</li>
         </ul>
         <div class="ios-variant-cta">
-          <a href="https://apps.apple.com/app/billhive-bill-splitting/id6759998736" target="_blank" style="display:inline-flex;height:44px;">
+          <a href="https://apps.apple.com/app/billhive-bill-splitting/id6759998736" target="_blank" rel="noopener noreferrer" style="display:inline-flex;height:44px;">
             <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" style="height:44px;width:auto;display:block;">
           </a>
         </div>
@@ -1092,7 +1171,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
           <li>All five tabs — Bills, Summary, Send &amp; Receive, Trends, Settings</li>
         </ul>
         <div class="ios-variant-cta">
-          <a href="https://apps.apple.com/app/selfhive-bill-splitting/id6760245713" target="_blank" style="display:inline-flex;height:44px;">
+          <a href="https://apps.apple.com/app/selfhive-bill-splitting/id6760245713" target="_blank" rel="noopener noreferrer" style="display:inline-flex;height:44px;">
             <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" style="height:44px;width:auto;display:block;">
           </a>
         </div>
@@ -1117,15 +1196,15 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   </div>
 </section>
 
-<!-- ═══════ SETUP ═══════ -->
-<section id="setup" style="position:relative;overflow:hidden;">
-  <div class="hex-stamp" style="width:260px;height:260px;top:60px;left:-80px;"></div>
-  <div class="hex-stamp" style="width:400px;height:400px;bottom:-120px;right:-100px;"></div>
+<!-- ═══════ SETUP — Docker deployment instructions ═══════ -->
+<section id="setup" aria-labelledby="setup-heading" style="position:relative;overflow:hidden;">
+  <div class="hex-stamp" aria-hidden="true" style="width:260px;height:260px;top:60px;left:-80px;"></div>
+  <div class="hex-stamp" aria-hidden="true" style="width:400px;height:400px;bottom:-120px;right:-100px;"></div>
   <div class="wrap">
     <div class="setup-grid">
       <div>
         <div class="section-kicker reveal">Self-Host</div>
-        <h2 class="section-h reveal d1">Deploy in minutes</h2>
+        <h2 id="setup-heading" class="section-h reveal d1">Deploy in minutes</h2>
         <p class="section-p reveal d2" style="margin-bottom:0">BillHive ships as a single Docker image. No external database, no Redis, no cloud services. One command and you're running.</p>
         <div class="setup-steps-list">
           <div class="setup-step reveal d2">
@@ -1196,11 +1275,11 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   </div>
 </section>
 
-<!-- ═══════ SUPPORT ═══════ -->
-<section id="support">
+<!-- ═══════ SUPPORT — help, bugs, FAQ ═══════ -->
+<section id="support" aria-labelledby="support-heading">
   <div class="wrap">
     <div class="section-kicker reveal">Support</div>
-    <h2 class="section-h reveal d1">Need help?</h2>
+    <h2 id="support-heading" class="section-h reveal d1">Need help?</h2>
     <p class="section-p reveal d2">BillHive is free, open-source software maintained by one developer. Here's how to get help or report issues.</p>
 
     <div class="support-grid">
@@ -1220,8 +1299,8 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
         <h3 class="support-t">Report a Bug</h3>
         <p class="support-d">Found something broken? Open a GitHub Issue on the relevant repository. Include your device, OS version, and steps to reproduce.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
-          <a href="https://github.com/MartyPortatoes/BillHive/issues" class="btn-s" target="_blank" style="display:inline-flex;">Web App Issues</a>
-          <a href="https://github.com/MartyPortatoes/BillHive-iOS/issues" class="btn-s" target="_blank" style="display:inline-flex;">iOS App Issues</a>
+          <a href="https://github.com/MartyPortatoes/BillHive/issues" class="btn-s" target="_blank" rel="noopener noreferrer" style="display:inline-flex;">Web App Issues</a>
+          <a href="https://github.com/MartyPortatoes/BillHive-iOS/issues" class="btn-s" target="_blank" rel="noopener noreferrer" style="display:inline-flex;">iOS App Issues</a>
         </div>
       </div>
 
@@ -1252,6 +1331,8 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   </div>
 </section>
 
+</main>
+
 <!-- ═══════ FOOTER ═══════ -->
 <footer>
   <div class="wrap">
@@ -1269,17 +1350,17 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
         </a>
         <p class="footer-brand-desc">Household bill management for iPhone and self-hosted servers. Track splits, send emails, collect reimbursements.</p>
       </div>
-      <div>
+      <nav aria-label="Project links">
         <div class="footer-col-title">Project</div>
         <div class="footer-col-links">
-          <a href="https://github.com/MartyPortatoes/BillHive" target="_blank">GitHub Repository</a>
-          <a href="https://github.com/martyportatoes/billhive-ios" target="_blank">iOS App</a>
-          <a href="https://github.com/MartyPortatoes/BillHive/releases" target="_blank">Releases</a>
+          <a href="https://github.com/MartyPortatoes/BillHive" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+          <a href="https://github.com/martyportatoes/billhive-ios" target="_blank" rel="noopener noreferrer">iOS App</a>
+          <a href="https://github.com/MartyPortatoes/BillHive/releases" target="_blank" rel="noopener noreferrer">Releases</a>
           <a href="#setup">Self-Host Guide</a>
           <a href="#support">Support</a>
         </div>
-      </div>
-      <div>
+      </nav>
+      <nav aria-label="Feature links">
         <div class="footer-col-title">Features</div>
         <div class="footer-col-links">
           <a href="#features">Bill Splitting</a>
@@ -1287,7 +1368,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
           <a href="#features">Payment Links</a>
           <a href="#features">Trends &amp; History</a>
         </div>
-      </div>
+      </nav>
     </div>
     <div class="footer-bottom">
       <div class="footer-badge">Open source · iPhone &amp; Web · No subscription</div>
@@ -1297,12 +1378,27 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 </footer>
 
 <script>
-// ─── Honeycomb canvas ──────────────────────────────────
-(function() {
+/**
+ * BillHive Landing Page Scripts
+ * ─────────────────────────────
+ * 1. Honeycomb canvas — decorative hex grid behind the hero section
+ * 2. Scroll reveal    — fade-in-up animation via IntersectionObserver
+ * 3. Nav scroll state — subtle border change on scroll
+ */
+
+// ─── 1. Honeycomb Canvas ──────────────────────────────
+// Draws a radial-fading hex grid on the hero background canvas.
+// The grid is purely decorative and is hidden from assistive tech
+// via aria-hidden on the <canvas> element.
+(function initHoneycombCanvas() {
   const canvas = document.getElementById('hive-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
+  /**
+   * Traces a flat-top hexagon path centered at (cx, cy) with radius r.
+   * Does NOT stroke or fill — caller decides rendering.
+   */
   function hexPath(cx, cy, r) {
     ctx.beginPath();
     for (let i = 0; i < 6; i++) {
@@ -1314,6 +1410,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
     ctx.closePath();
   }
 
+  /** Redraws the entire hex grid, sized to the current canvas dimensions. */
   function draw() {
     const W = canvas.offsetWidth;
     const H = canvas.offsetHeight;
@@ -1321,11 +1418,11 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
     canvas.height = H;
     ctx.clearRect(0, 0, W, H);
 
-    const R = 38;          // hex radius
+    const R = 38;          // hex radius in px
     const col = R * 2;
     const row = R * Math.sqrt(3);
 
-    // Radial fade mask: bright at center-right (where the visual is), fades to edges
+    // Radial fade origin: center-right (where hero visual orbits)
     const cx = W * 0.72, cy = H * 0.5;
 
     for (let c = -1; c < Math.ceil(W / col) + 2; c++) {
@@ -1338,13 +1435,13 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
         const alpha = Math.max(0, 1 - dist / maxDist);
         if (alpha < 0.005) continue;
 
-        // Stroke hex
+        // Outline stroke for every visible hex
         hexPath(x, y, R - 2);
         ctx.strokeStyle = `rgba(245,168,0,${(alpha * 0.13).toFixed(3)})`;
         ctx.lineWidth = 0.8;
         ctx.stroke();
 
-        // Occasional filled accent hex near center
+        // Subtle fill accent for hexes closest to the center cluster
         if (alpha > 0.55 && Math.abs(dx) < R * 3 && Math.abs(dy) < R * 3) {
           hexPath(x, y, R - 2);
           ctx.fillStyle = `rgba(245,168,0,${(alpha * 0.04).toFixed(3)})`;
@@ -1354,23 +1451,52 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
     }
   }
 
+  /**
+   * Debounce helper — delays execution until the caller stops invoking
+   * for `wait` ms. Prevents layout thrashing on rapid resize events.
+   */
+  function debounce(fn, wait) {
+    let timer;
+    return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn.apply(this, args), wait);
+    };
+  }
+
   draw();
-  window.addEventListener('resize', draw, { passive: true });
+  // Debounce resize redraws to avoid expensive canvas work on every frame
+  window.addEventListener('resize', debounce(draw, 150), { passive: true });
 })();
 
-// Scroll reveal
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+// ─── 2. Scroll Reveal ─────────────────────────────────
+// Elements with class "reveal" fade in when they enter the viewport.
+// The observer fires once (unobserve not needed since CSS transition
+// is one-way — elements stay visible after reveal).
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target); // stop watching once revealed
+      }
+    });
+  },
+  { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+);
+document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
-// Hero reveals immediately
-document.querySelectorAll('#hero .reveal').forEach(el => el.classList.add('in'));
+// Hero section reveals immediately (above the fold, no scroll needed)
+document.querySelectorAll('#hero .reveal').forEach((el) => el.classList.add('in'));
 
-// Nav border on scroll
+// ─── 3. Nav Scroll State ──────────────────────────────
+// Intensifies the nav bottom border after scrolling past the hero badge
+// area, giving a subtle "glass pane" separation effect.
 window.addEventListener('scroll', () => {
-  document.getElementById('main-nav').style.borderBottomColor =
-    window.scrollY > 60 ? 'rgba(245,168,0,0.12)' : 'rgba(245,168,0,0.07)';
+  const nav = document.getElementById('main-nav');
+  if (nav) {
+    nav.style.borderBottomColor =
+      window.scrollY > 60 ? 'rgba(245,168,0,0.12)' : 'rgba(245,168,0,0.07)';
+  }
 }, { passive: true });
 </script>
 </body>

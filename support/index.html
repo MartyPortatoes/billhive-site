@@ -1,12 +1,42 @@
 <!DOCTYPE html>
+<!--
+  BillHive — Support Page
+  ========================
+  Standalone support/FAQ page for billhiveapp.com/support.
+  Provides email contact, GitHub Issue links, and common FAQs.
+
+  Last reviewed: 2026-03-22
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BillHive — Support</title>
 <meta name="description" content="Get help with BillHive. Contact support, report bugs, or browse frequently asked questions.">
+<!-- Security -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<!-- Theme & branding -->
+<meta name="theme-color" content="#0c0d0f">
+<meta name="color-scheme" content="dark">
+<!-- Canonical URL -->
+<link rel="canonical" href="https://billhiveapp.com/support/">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://billhiveapp.com/support/">
+<meta property="og:title" content="BillHive — Support">
+<meta property="og:description" content="Get help with BillHive. Contact support, report bugs, or browse frequently asked questions.">
+<meta property="og:site_name" content="BillHive">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BillHive — Support">
+<meta name="twitter:description" content="Get help with BillHive. Contact support, report bugs, or browse frequently asked questions.">
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+/* ═══════ TOKENS ═══════ */
 :root {
   --bg:      #0c0d0f;
   --surface: #141518;
@@ -17,7 +47,7 @@
   --muted:   #767880;
   --amber:   #F5A800;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{
   background-color:var(--bg);
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='150'%3E%3Cpath d='M42 99L0 75L0 24L42 0L84 24L84 75ZM42 150L0 126L0 102L42 78L84 102L84 126Z' fill='none' stroke='%23F5A800' stroke-opacity='0.04' stroke-width='0.5'/%3E%3C/svg%3E");
@@ -26,10 +56,10 @@ body{
 a{color:var(--amber);text-decoration:none;}
 a:hover{text-decoration:underline;}
 
-/* layout */
+/* ═══════ LAYOUT ═══════ */
 .wrap{max-width:720px;margin:0 auto;padding:0 24px;}
 
-/* nav */
+/* ═══════ NAV ═══════ */
 .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;max-width:720px;margin:0 auto;}
 .nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
 .nav-name{font-family:'Syncopate',sans-serif;font-weight:700;font-size:15px;color:var(--text);}
@@ -37,13 +67,13 @@ a:hover{text-decoration:underline;}
 .nav-back{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.06em;}
 .nav-back:hover{color:var(--text);}
 
-/* hero */
+/* ═══════ HERO ═══════ */
 .hero{text-align:center;padding:60px 0 48px;}
 .hero h1{font-family:'Syncopate',sans-serif;font-weight:700;font-size:28px;margin-bottom:8px;}
 .hero h1 span{color:var(--amber);}
 .hero p{color:var(--muted);font-size:15px;font-weight:300;max-width:480px;margin:0 auto;}
 
-/* cards */
+/* ═══════ CARDS ═══════ */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px 24px;margin-bottom:16px;}
 .card-icon{font-size:28px;margin-bottom:14px;}
 .card h2{
@@ -52,7 +82,7 @@ a:hover{text-decoration:underline;}
 }
 .card p{font-size:13px;color:var(--muted);line-height:1.65;font-weight:300;}
 
-/* btn */
+/* ═══════ BUTTONS ═══════ */
 .btn{
   display:inline-flex;align-items:center;gap:6px;padding:9px 16px;
   border-radius:8px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;
@@ -63,7 +93,7 @@ a:hover{text-decoration:underline;}
 .btn:hover{border-color:var(--amber);color:var(--amber);text-decoration:none;}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
 
-/* faq */
+/* ═══════ FAQ ═══════ */
 .faq details{border-bottom:1px solid var(--border);padding:14px 0;}
 .faq details:last-child{border-bottom:none;}
 .faq summary{
@@ -77,20 +107,47 @@ a:hover{text-decoration:underline;}
 .faq summary::-webkit-details-marker{display:none;}
 .faq details p{font-size:12px;color:var(--muted);line-height:1.65;font-weight:300;padding:8px 0 0 26px;}
 
-/* footer */
+/* ═══════ FOOTER ═══════ */
 .foot{text-align:center;padding:48px 0 32px;color:var(--muted);font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.06em;}
+
+/* ═══════ SKIP LINK ═══════ */
+.skip-link{
+  position:fixed;top:-100%;left:50%;transform:translateX(-50%);
+  z-index:200;background:var(--amber);color:#0c0d0f;
+  padding:10px 20px;border-radius:0 0 8px 8px;
+  font-family:'DM Mono',monospace;font-size:12px;font-weight:500;
+  text-decoration:none;transition:top 0.2s;
+}
+.skip-link:focus{top:0;}
+
+/* ═══════ FOCUS & MOTION ═══════ */
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;}
+:focus:not(:focus-visible){outline:none;}
+
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
 </style>
 </head>
 <body>
 
-<div class="nav">
+<!-- Skip link for keyboard navigation -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<nav class="nav" aria-label="Support page navigation">
   <a href="/" class="nav-logo">
-    <svg width="18" height="18" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="48.6,50 41.2,62.8 26.4,62.8 19,50 26.4,37.2 41.2,37.2" fill="#F5A800"/><polygon points="72.9,36 65.5,48.8 50.7,48.8 43.3,36 50.7,23.2 65.5,23.2" fill="#F5A800"/><polygon points="72.9,64 65.5,76.8 50.7,76.8 43.3,64 50.7,51.2 65.5,51.2" fill="#F5A800"/></svg>
+    <svg width="18" height="18" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="48.6,50 41.2,62.8 26.4,62.8 19,50 26.4,37.2 41.2,37.2" fill="#F5A800"/><polygon points="72.9,36 65.5,48.8 50.7,48.8 43.3,36 50.7,23.2 65.5,23.2" fill="#F5A800"/><polygon points="72.9,64 65.5,76.8 50.7,76.8 43.3,64 50.7,51.2 65.5,51.2" fill="#F5A800"/></svg>
     <div class="nav-name">Bill<span>Hive</span></div>
   </a>
-  <a href="/" class="nav-back">← Back to home</a>
-</div>
+  <a href="/" class="nav-back">&larr; Back to home</a>
+</nav>
 
+<main id="main-content">
 <div class="wrap">
 
   <div class="hero">
@@ -100,29 +157,29 @@ a:hover{text-decoration:underline;}
 
   <!-- Email Support -->
   <div class="card">
-    <div class="card-icon">📧</div>
+    <div class="card-icon" aria-hidden="true">📧</div>
     <h2>Email Support</h2>
     <p>For questions, feedback, or issues with the iOS app or self-hosted server, send an email and you'll hear back within a few days.</p>
     <a href="mailto:billhive-support@mattp.me" class="btn">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,7 12,13 2,7"/></svg>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,7 12,13 2,7"/></svg>
       billhive-support@mattp.me
     </a>
   </div>
 
   <!-- Report a Bug -->
   <div class="card">
-    <div class="card-icon">🐛</div>
+    <div class="card-icon" aria-hidden="true">🐛</div>
     <h2>Report a Bug</h2>
     <p>Found something broken? Open a GitHub Issue on the relevant repository. Include your device, OS version, and steps to reproduce.</p>
     <div class="btn-row">
-      <a href="https://github.com/MartyPortatoes/BillHive/issues" class="btn" target="_blank">Web App Issues</a>
-      <a href="https://github.com/MartyPortatoes/BillHive-iOS/issues" class="btn" target="_blank">iOS App Issues</a>
+      <a href="https://github.com/MartyPortatoes/BillHive/issues" class="btn" target="_blank" rel="noopener noreferrer">Web App Issues</a>
+      <a href="https://github.com/MartyPortatoes/BillHive-iOS/issues" class="btn" target="_blank" rel="noopener noreferrer">iOS App Issues</a>
     </div>
   </div>
 
   <!-- FAQ -->
   <div class="card">
-    <div class="card-icon">💬</div>
+    <div class="card-icon" aria-hidden="true">💬</div>
     <h2>Frequently Asked Questions</h2>
     <div class="faq">
       <details>
@@ -157,6 +214,7 @@ a:hover{text-decoration:underline;}
   </div>
 
 </div>
+</main>
 
 </body>
 </html>
