@@ -6,8 +6,8 @@
   bill-splitting tool (self-hosted web app + iOS companion apps).
 
   Stack: Static HTML/CSS/JS, hosted on GitHub Pages.
-  Fonts: Syncopate (headings), DM Mono (UI/code), Outfit (body).
-  Design: Dark theme with amber (#F5A800) accent, hexagonal motif.
+  Fonts: Newsreader (headings), Courier Prime (UI/code), Outfit (body), Syncopate (brand wordmark).
+  Design: Light warm-earthy theme with honey (#d8923e) accent, hexagonal motif.
 
   Sections:
     #hero      — Value proposition, CTAs, animated hexagon visual
@@ -32,8 +32,8 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://tools.applemediaservices.com data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <!-- Theme & branding -->
-<meta name="theme-color" content="#0c0d0f">
-<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#f4ecda">
+<meta name="color-scheme" content="light">
 <!-- Canonical URL -->
 <link rel="canonical" href="https://billhiveapp.com/">
 <!-- Open Graph (social sharing previews) -->
@@ -48,27 +48,31 @@
 <meta name="twitter:description" content="Self-hosted household bill management. Smart splitting, payment deep-links, and email summaries. One Docker container.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@500;600;700&family=Outfit:wght@300;400;500;600;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@700&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════════════
    TOKENS
 ══════════════════════════════════════════════ */
 :root {
-  --bg:      #0c0d0f;
-  --surface: #141518;
-  --surface2:#1c1e22;
-  --surface3:#242629;
-  --border:  #2a2c31;
-  --border2: #34373d;
-  --text:    #e4e5e8;
-  --muted:   #767880;
-  --muted2:  #4a4c52;
-  --amber:   #F5A800;
-  --blue:    #5bc4f5;
-  --orange:  #f5a623;
-  --purple:  #b39ddb;
-  --red:     #ef5350;
-  --green:   #a8e063;
+  --bg:      #f4ecda;
+  --surface: #fbf5e8;
+  --surface2:#ede1c6;
+  --surface3:#e0d2b1;
+  --border:  #d8c8a4;
+  --border2: #b8a578;
+  --text:    #2b1d11;
+  --muted:   #7a6a52;
+  --muted2:  #a08e72;
+  --amber:   #d8923e;
+  --amber-deep: #b8721e;
+  --amber-soft: #f0c073;
+  --blue:    #6fa5c4;
+  --orange:  #c87a2e;
+  --purple:  #8b5a6f;
+  --red:     #a04a2e;
+  --green:   #5b6f3f;
+  --olive:   #7e8556;
+  --clay:    #b8654a;
 }
 
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -88,7 +92,7 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='150'%3E%3Cpath d='M42 99L0 75L0 24L42 0L84 24L84 75ZM42 150L0 126L0 102L42 78L84 102L84 126Z' fill='none' stroke='%23F5A800' stroke-opacity='0.04' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='150'%3E%3Cpath d='M42 99L0 75L0 24L42 0L84 24L84 75ZM42 150L0 126L0 102L42 78L84 102L84 126Z' fill='none' stroke='%23b8a578' stroke-opacity='0.18' stroke-width='0.5'/%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 0;
 }
@@ -107,7 +111,7 @@ body::before {
 .hex-stamp {
   position: absolute;
   clip-path: polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
-  background: rgba(245,168,0,0.03);
+  background: rgba(216,146,62,0.03);
   border: none;
   pointer-events: none;
   z-index: 0;
@@ -133,9 +137,9 @@ nav {
   height: 58px;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 32px;
-  background: rgba(12,13,15,0.88);
+  background: rgba(244,236,218,0.92);
   backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(245,168,0,0.07);
+  border-bottom: 1px solid rgba(216,146,62,0.22);
   transition: border-color 0.3s;
 }
 .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
@@ -148,18 +152,18 @@ nav {
 .nav-name span { color: var(--amber); }
 .nav-links { display: flex; align-items: center; gap: 26px; }
 .nav-links a {
-  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em;
+  font-family: 'Courier Prime', monospace; font-size: 10px; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s;
 }
 .nav-links a:hover { color: var(--text); }
 .btn-nav {
-  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500;
+  font-family: 'Courier Prime', monospace; font-size: 10px; font-weight: 500;
   letter-spacing: 0.1em; text-transform: uppercase;
-  background: var(--amber); color: #0c0d0f;
+  background: var(--amber); color: #2b1d11;
   padding: 7px 16px; border-radius: 6px; text-decoration: none;
   transition: background 0.2s, transform 0.15s;
 }
-.btn-nav:hover { background: #ffc12d; transform: translateY(-1px); }
+.btn-nav:hover { background: var(--amber-soft); transform: translateY(-1px); }
 
 /* ══════════════════════════════════════════════
    HERO
@@ -173,10 +177,10 @@ nav {
 }
 .hero-badge {
   display: inline-flex; align-items: center; gap: 7px;
-  background: rgba(245,168,0,0.07);
-  border: 1px solid rgba(245,168,0,0.18);
+  background: rgba(216,146,62,0.08);
+  border: 1px solid rgba(216,146,62,0.2);
   border-radius: 20px; padding: 5px 13px;
-  font-family: 'DM Mono', monospace; font-size: 10px;
+  font-family: 'Courier Prime', monospace; font-size: 10px;
   letter-spacing: 0.16em; text-transform: uppercase; color: var(--amber);
   margin-bottom: 26px;
 }
@@ -207,18 +211,18 @@ h1.hero-title .h-hive { color: var(--amber); }
 .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
 .btn-p {
   display: inline-flex; align-items: center; gap: 7px;
-  background: var(--amber); color: #0c0d0f;
+  background: var(--amber); color: #2b1d11;
   padding: 13px 22px; border-radius: 8px;
-  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+  font-family: 'Courier Prime', monospace; font-size: 11px; font-weight: 500;
   letter-spacing: 0.09em; text-transform: uppercase; text-decoration: none;
   transition: all 0.2s; border: none; cursor: pointer;
 }
-.btn-p:hover { background: #ffc12d; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(245,168,0,0.28); }
+.btn-p:hover { background: var(--amber-soft); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(216,146,62,0.28); }
 .btn-s {
   display: inline-flex; align-items: center; gap: 7px;
   background: transparent; color: var(--text);
   padding: 13px 22px; border-radius: 8px;
-  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+  font-family: 'Courier Prime', monospace; font-size: 11px; font-weight: 500;
   letter-spacing: 0.09em; text-transform: uppercase; text-decoration: none;
   border: 1px solid var(--border2); transition: all 0.2s;
 }
@@ -233,9 +237,9 @@ h1.hero-title .h-hive { color: var(--amber); }
   position: absolute; border-radius: 50%; border: 1px solid;
   animation: spin 24s linear infinite;
 }
-.hv-ring-a { width: 340px; height: 340px; border-color: rgba(245,168,0,0.07); animation-duration: 28s; }
-.hv-ring-b { width: 255px; height: 255px; border-color: rgba(245,168,0,0.11); animation-duration: 19s; animation-direction: reverse; }
-.hv-ring-c { width: 400px; height: 400px; border-color: rgba(245,168,0,0.04); animation-duration: 40s; }
+.hv-ring-a { width: 340px; height: 340px; border-color: rgba(216,146,62,0.12); animation-duration: 28s; }
+.hv-ring-b { width: 255px; height: 255px; border-color: rgba(216,146,62,0.18); animation-duration: 19s; animation-direction: reverse; }
+.hv-ring-c { width: 400px; height: 400px; border-color: rgba(216,146,62,0.07); animation-duration: 40s; }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .hv-ring-a::after, .hv-ring-b::after {
   content: ''; position: absolute; border-radius: 50%; background: var(--amber);
@@ -245,14 +249,14 @@ h1.hero-title .h-hive { color: var(--amber); }
 .hv-ring-b::after { width: 5px; height: 5px; bottom: -2.5px; left: calc(50% - 2.5px); opacity: 0.7; }
 .hv-glow {
   position: absolute; width: 220px; height: 220px;
-  background: radial-gradient(ellipse, rgba(245,168,0,0.18) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(216,146,62,0.18) 0%, transparent 70%);
   border-radius: 50%; animation: glow 4.5s ease-in-out infinite;
 }
 @keyframes glow { 0%,100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
 .hv-hex {
   position: relative; z-index: 2;
   animation: float 6.5s ease-in-out infinite;
-  filter: drop-shadow(0 0 40px rgba(245,168,0,0.30)) drop-shadow(0 0 100px rgba(245,168,0,0.10));
+  filter: drop-shadow(0 0 40px rgba(216,146,62,0.30)) drop-shadow(0 0 100px rgba(216,146,62,0.10));
 }
 @keyframes float {
   0%,100% { transform: translateY(0); }
@@ -265,7 +269,7 @@ h1.hero-title .h-hive { color: var(--amber); }
   position: absolute; z-index: 4;
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 10px; padding: 10px 14px;
-  font-family: 'DM Mono', monospace; font-size: 11px;
+  font-family: 'Courier Prime', monospace; font-size: 11px;
   white-space: nowrap; animation: card-bob 5s ease-in-out infinite;
 }
 .hv-card.c1 { top: 8px; right: -16px; animation-delay: 0s; animation-duration: 5.5s; }
@@ -292,11 +296,11 @@ h1.hero-title .h-hive { color: var(--amber); }
   background: var(--surface); padding: 28px 20px; text-align: center;
 }
 .stat-n {
-  font-family: 'Syncopate', sans-serif; font-weight: 700;
+  font-family: 'Newsreader', serif; font-weight: 700;
   font-size: 30px; color: var(--amber); letter-spacing: -0.03em; margin-bottom: 5px;
 }
 .stat-l {
-  font-family: 'DM Mono', monospace; font-size: 9px;
+  font-family: 'Courier Prime', monospace; font-size: 9px;
   letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
 }
 
@@ -304,11 +308,11 @@ h1.hero-title .h-hive { color: var(--amber); }
    SECTION SCAFFOLDING
 ══════════════════════════════════════════════ */
 .section-kicker {
-  font-family: 'DM Mono', monospace; font-size: 10px;
+  font-family: 'Courier Prime', monospace; font-size: 10px;
   letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber); margin-bottom: 12px;
 }
 .section-h {
-  font-family: 'Syncopate', sans-serif; font-weight: 700;
+  font-family: 'Newsreader', serif; font-weight: 700;
   font-size: clamp(22px, 3vw, 38px); letter-spacing: -0.02em; margin-bottom: 14px;
 }
 .section-p {
@@ -336,16 +340,16 @@ h1.hero-title .h-hive { color: var(--amber); }
 .step-num-hex::before {
   content: ''; position: absolute; inset: 0;
   clip-path: polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
-  background: rgba(245,168,0,0.09);
+  background: rgba(216,146,62,0.09);
 }
 .step-num-hex span {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; color: var(--amber);
+  font-family: 'Courier Prime', monospace; font-size: 12px; font-weight: 500; color: var(--amber);
 }
 .step-emoji { font-size: 22px; margin-bottom: 14px; display: block; }
 .step-t {
-  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+  font-family: 'Courier Prime', monospace; font-size: 11px; font-weight: 500;
   letter-spacing: 0.09em; text-transform: uppercase; color: var(--text); margin-bottom: 10px;
 }
 .step-d { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
@@ -373,14 +377,14 @@ h1.hero-title .h-hive { color: var(--amber); }
 .feat-icon {
   width: 44px; height: 44px;
   clip-path: polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
-  background: rgba(245,168,0,0.09);
+  background: rgba(216,146,62,0.09);
   display: flex; align-items: center; justify-content: center;
   font-size: 19px; margin-bottom: 20px;
   transition: background 0.2s;
 }
-.feat-card:hover .feat-icon { background: rgba(245,168,0,0.16); }
+.feat-card:hover .feat-icon { background: rgba(216,146,62,0.16); }
 .feat-t {
-  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500;
+  font-family: 'Courier Prime', monospace; font-size: 10px; font-weight: 500;
   letter-spacing: 0.12em; text-transform: uppercase; color: var(--text); margin-bottom: 10px;
 }
 .feat-d { font-size: 13px; color: var(--muted); line-height: 1.66; font-weight: 300; }
@@ -392,7 +396,7 @@ h1.hero-title .h-hive { color: var(--amber); }
 .browser-chrome {
   background: var(--surface); border: 1px solid var(--border2);
   border-radius: 14px; overflow: hidden; margin-top: 56px;
-  box-shadow: 0 48px 120px rgba(0,0,0,0.55), 0 0 0 1px rgba(245,168,0,0.05);
+  box-shadow: 0 12px 32px rgba(74,56,38,0.12), 0 2px 4px rgba(74,56,38,0.06), 0 0 0 1px rgba(216,146,62,0.12);
 }
 .bc-bar {
   background: var(--surface2); border-bottom: 1px solid var(--border);
@@ -400,14 +404,22 @@ h1.hero-title .h-hive { color: var(--amber); }
 }
 .bc-dots { display: flex; gap: 6px; }
 .bc-dot { width: 10px; height: 10px; border-radius: 50%; }
-.bc-dot.r { background: #ef5350; } .bc-dot.y { background: #ffd54f; } .bc-dot.g { background: #a8e063; }
+.bc-dot.r { background: #ef5350; } .bc-dot.y { background: #ffd54f; } .bc-dot.g { background: #5b6f3f; }
 .bc-url {
   background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
-  padding: 4px 12px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted);
+  padding: 4px 12px; font-family: 'Courier Prime', monospace; font-size: 10px; color: var(--muted);
   display: flex; align-items: center; gap: 5px; max-width: 300px;
 }
 .bc-url-lock { color: var(--amber); }
-/* App shell inside browser */
+/* App shell inside browser — dark mock (represents actual dark-themed app) */
+.browser-chrome .app-shell-nav,
+.browser-chrome .app-tabs-bar,
+.browser-chrome .app-body {
+  --bg: #0c0d0f; --surface: #141518; --surface2: #1c1e22; --surface3: #242629;
+  --border: #2a2c31; --border2: #34373d; --text: #e4e5e8; --muted: #767880;
+  --muted2: #4a4c52; --amber: #F5A800; --blue: #5bc4f5; --orange: #f5a623;
+  --purple: #b39ddb; --red: #ef5350; --green: #a8e063;
+}
 .app-shell-nav {
   background: var(--bg); border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: 48px;
@@ -425,7 +437,7 @@ h1.hero-title .h-hive { color: var(--amber); }
 .app-month-tag {
   background: var(--surface2); border: 1px solid var(--border);
   border-radius: 6px; padding: 3px 11px;
-  font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text);
+  font-family: 'Courier Prime', monospace; font-size: 10px; color: var(--text);
 }
 .app-tabs-bar {
   background: var(--bg); border-bottom: 1px solid var(--border);
@@ -433,7 +445,7 @@ h1.hero-title .h-hive { color: var(--amber); }
 }
 .app-tab-item {
   height: 36px; display: flex; align-items: center; padding: 0 13px;
-  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  font-family: 'Courier Prime', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--muted); border-bottom: 2px solid transparent;
 }
 .app-tab-item.on { color: var(--amber); border-bottom-color: var(--amber); }
@@ -456,11 +468,11 @@ h1.hero-title .h-hive { color: var(--amber); }
   width: 28px; height: 28px; border-radius: 5px;
   display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0;
 }
-.mbill-name { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text); }
-.mbill-sub  { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 1px; }
-.mbill-total { font-family: 'DM Mono', monospace; font-weight: 500; font-size: 16px; color: var(--amber); text-align: right; }
-.mbill-share { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); text-align: right; margin-top: 2px; }
-.mbill-tag  { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); text-align: right; }
+.mbill-name { font-family: 'Courier Prime', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text); }
+.mbill-sub  { font-family: 'Courier Prime', monospace; font-size: 9px; color: var(--muted); margin-top: 1px; }
+.mbill-total { font-family: 'Courier Prime', monospace; font-weight: 500; font-size: 16px; color: var(--amber); text-align: right; }
+.mbill-share { font-family: 'Courier Prime', monospace; font-size: 9px; color: var(--muted); text-align: right; margin-top: 2px; }
+.mbill-tag  { font-family: 'Courier Prime', monospace; font-size: 10px; color: var(--muted); text-align: right; }
 .mbill-btn  {
   width: 22px; height: 22px; border: 1px solid var(--border);
   border-radius: 4px; display: flex; align-items: center; justify-content: center;
@@ -470,7 +482,7 @@ h1.hero-title .h-hive { color: var(--amber); }
 .mbill-body { border-top: 1px solid var(--border); background: var(--surface2); padding: 11px 14px; }
 .mbill-lhd {
   display: grid; grid-template-columns: 1fr 70px 80px;
-  gap: 8px; font-family: 'DM Mono', monospace; font-size: 9px;
+  gap: 8px; font-family: 'Courier Prime', monospace; font-size: 9px;
   letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px;
 }
 .mbill-line {
@@ -478,10 +490,10 @@ h1.hero-title .h-hive { color: var(--amber); }
   gap: 8px; align-items: center; padding: 5px 0;
   border-top: 1px solid rgba(255,255,255,0.04);
 }
-.mpersontag { display: inline-flex; align-items: center; gap: 4px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text); }
+.mpersontag { display: inline-flex; align-items: center; gap: 4px; font-family: 'Courier Prime', monospace; font-size: 10px; color: var(--text); }
 .mdot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.mpct  { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); text-align: right; }
-.mamt  { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; text-align: right; }
+.mpct  { font-family: 'Courier Prime', monospace; font-size: 10px; color: var(--muted); text-align: right; }
+.mamt  { font-family: 'Courier Prime', monospace; font-size: 11px; font-weight: 500; text-align: right; }
 /* Summary row */
 .msum-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 12px; }
 .msum-card {
@@ -492,9 +504,9 @@ h1.hero-title .h-hive { color: var(--amber); }
 .msum-card.ca::before { background: var(--amber); }
 .msum-card.co::before { background: var(--orange); }
 .msum-card.cp::before { background: var(--purple); }
-.msum-name { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
-.msum-val  { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 700; line-height: 1; margin: 4px 0; }
-.msum-det  { font-family: 'DM Mono', monospace; font-size: 8px; color: var(--muted); margin-top: 2px; }
+.msum-name { font-family: 'Courier Prime', monospace; font-size: 10px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.msum-val  { font-family: 'Courier Prime', monospace; font-size: 20px; font-weight: 700; line-height: 1; margin: 4px 0; }
+.msum-det  { font-family: 'Courier Prime', monospace; font-size: 8px; color: var(--muted); margin-top: 2px; }
 
 /* ══════════════════════════════════════════════
    SETUP
@@ -506,15 +518,15 @@ h1.hero-title .h-hive { color: var(--amber); }
 .setup-step-hex {
   width: 30px; height: 30px;
   clip-path: polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
-  background: rgba(245,168,0,0.1);
+  background: rgba(216,146,62,0.1);
   display: flex; align-items: center; justify-content: center;
-  font-family: 'DM Mono', monospace; font-size: 11px; color: var(--amber);
+  font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--amber);
   flex-shrink: 0; margin-top: 1px;
 }
-.setup-step-body h4 { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.07em; color: var(--text); margin-bottom: 5px; }
+.setup-step-body h4 { font-family: 'Courier Prime', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.07em; color: var(--text); margin-bottom: 5px; }
 .setup-step-body p  { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
 .setup-note {
-  background: rgba(245,168,0,0.05); border: 1px solid rgba(245,168,0,0.14);
+  background: rgba(216,146,62,0.05); border: 1px solid rgba(216,146,62,0.14);
   border-radius: 8px; padding: 14px 16px; margin-top: 26px;
   font-size: 13px; color: var(--muted); line-height: 1.65;
 }
@@ -529,16 +541,16 @@ h1.hero-title .h-hive { color: var(--amber); }
   padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;
 }
 .code-panel-bar-title {
-  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.13em;
+  font-family: 'Courier Prime', monospace; font-size: 10px; letter-spacing: 0.13em;
   text-transform: uppercase; color: var(--muted);
 }
 .code-panel-tag {
-  background: rgba(245,168,0,0.1); border: 1px solid rgba(245,168,0,0.2);
+  background: rgba(216,146,62,0.1); border: 1px solid rgba(216,146,62,0.2);
   border-radius: 4px; padding: 2px 8px;
-  font-family: 'DM Mono', monospace; font-size: 9px; color: var(--amber); letter-spacing: 0.06em;
+  font-family: 'Courier Prime', monospace; font-size: 9px; color: var(--amber); letter-spacing: 0.06em;
 }
 .code-body {
-  padding: 20px; font-family: 'DM Mono', monospace; font-size: 12px;
+  padding: 20px; font-family: 'Courier Prime', monospace; font-size: 12px;
   line-height: 1.95; overflow-x: auto;
 }
 .c-cmt  { color: var(--muted); }
@@ -547,15 +559,15 @@ h1.hero-title .h-hive { color: var(--amber); }
 .c-val  { color: var(--amber); }
 .c-str  { color: var(--green); }
 .code-panel-sep { border: none; border-top: 1px solid var(--border); }
-.code-body-sm { padding: 14px 20px 18px; font-family: 'DM Mono', monospace; font-size: 11px; line-height: 2; }
+.code-body-sm { padding: 14px 20px 18px; font-family: 'Courier Prime', monospace; font-size: 11px; line-height: 2; }
 .tech-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 .tech-pill {
   background: var(--surface2); border: 1px solid var(--border);
   border-radius: 6px; padding: 5px 12px;
-  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--muted);
+  font-family: 'Courier Prime', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--muted);
 }
 .tech-pill.amber {
-  background: rgba(245,168,0,0.07); border-color: rgba(245,168,0,0.18); color: var(--amber);
+  background: rgba(216,146,62,0.07); border-color: rgba(216,146,62,0.18); color: var(--amber);
 }
 
 /* ══════════════════════════════════════════════
@@ -571,7 +583,7 @@ h1.hero-title .h-hive { color: var(--amber); }
 }
 .support-icon { font-size: 28px; margin-bottom: 14px; }
 .support-t {
-  font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 600;
+  font-family: 'Courier Prime', monospace; font-size: 12px; font-weight: 600;
   letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); margin-bottom: 10px;
 }
 .support-d { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
@@ -581,7 +593,7 @@ h1.hero-title .h-hive { color: var(--amber); }
 }
 .support-faq details:last-child { border-bottom: none; }
 .support-faq summary {
-  font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500;
+  font-family: 'Courier Prime', monospace; font-size: 12px; font-weight: 500;
   color: var(--text); cursor: pointer; list-style: none; display: flex;
   align-items: center; gap: 8px;
 }
@@ -606,19 +618,19 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   max-width: 280px; font-weight: 300; margin-top: 12px;
 }
 .footer-col-title {
-  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.18em;
+  font-family: 'Courier Prime', monospace; font-size: 9px; letter-spacing: 0.18em;
   text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
 }
 .footer-col-links { display: flex; flex-direction: column; gap: 8px; }
 .footer-col-links a {
-  font-family: 'DM Mono', monospace; font-size: 11px;
+  font-family: 'Courier Prime', monospace; font-size: 11px;
   color: var(--muted); text-decoration: none; transition: color 0.2s;
 }
 .footer-col-links a:hover { color: var(--amber); }
 .footer-bottom {
   border-top: 1px solid var(--border); padding-top: 22px;
   display: flex; align-items: center; justify-content: space-between;
-  font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted2); letter-spacing: 0.06em;
+  font-family: 'Courier Prime', monospace; font-size: 10px; color: var(--muted2); letter-spacing: 0.06em;
 }
 .footer-badge { display: flex; align-items: center; gap: 6px; }
 .footer-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); }
@@ -647,8 +659,8 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   display: flex; flex-direction: column; gap: 0;
   transition: border-color 0.2s;
 }
-.ios-variant-card:hover { border-color: rgba(245,168,0,0.35); }
-.ios-variant-card.primary { border-color: rgba(245,168,0,0.2); }
+.ios-variant-card:hover { border-color: rgba(216,146,62,0.35); }
+.ios-variant-card.primary { border-color: rgba(216,146,62,0.2); }
 .ios-variant-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
 .ios-variant-icon {
   width: 52px; height: 52px; border-radius: 12px;
@@ -659,12 +671,12 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 .ios-variant-name { font-family: 'Syncopate', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.02em; color: var(--text); line-height: 1.2; }
 .ios-variant-tag {
   display: inline-block; margin-top: 5px;
-  font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500;
+  font-family: 'Courier Prime', monospace; font-size: 9px; font-weight: 500;
   letter-spacing: 0.12em; text-transform: uppercase;
   padding: 3px 8px; border-radius: 4px;
 }
-.ios-variant-tag.standalone { background: rgba(168,224,99,0.1); color: #a8e063; }
-.ios-variant-tag.connected  { background: rgba(245,168,0,0.1);  color: var(--amber); }
+.ios-variant-tag.standalone { background: rgba(91,111,63,0.1); color: #5b6f3f; }
+.ios-variant-tag.connected  { background: rgba(216,146,62,0.1);  color: var(--amber); }
 .ios-variant-desc { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 20px; }
 .ios-variant-features { list-style: none; padding: 0; margin: 0 0 28px; flex: 1; }
 .ios-variant-features li { display: flex; align-items: flex-start; gap: 9px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted); line-height: 1.5; }
@@ -672,7 +684,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 .ios-variant-features li::before { content: '◆'; color: var(--amber); font-size: 6px; margin-top: 6px; flex-shrink: 0; }
 .ios-variant-cta { margin-top: auto; }
 .ios-shared { margin-bottom: 40px; }
-.ios-shared-title { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+.ios-shared-title { font-family: 'Courier Prime', monospace; font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
 .ios-shared-pills { display: flex; flex-wrap: wrap; gap: 8px; }
 .ios-shared-pill { font-size: 12px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; }
 .ios-phone-wrap { display: flex; justify-content: center; margin-top: 16px; }
@@ -713,9 +725,9 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 ══════════════════════════════════════════════ */
 .skip-link {
   position: fixed; top: -100%; left: 50%; transform: translateX(-50%);
-  z-index: 200; background: var(--amber); color: #0c0d0f;
+  z-index: 200; background: var(--amber); color: #2b1d11;
   padding: 10px 20px; border-radius: 0 0 8px 8px;
-  font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500;
+  font-family: 'Courier Prime', monospace; font-size: 12px; font-weight: 500;
   text-decoration: none; transition: top 0.2s;
 }
 .skip-link:focus { top: 0; }
@@ -753,9 +765,9 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   <a href="#" class="nav-logo">
     <div class="nav-hexmark">
       <svg width="22" height="22" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="48.6,50 41.2,62.8 26.4,62.8 19,50 26.4,37.2 41.2,37.2" fill="#F5A800"/>
-        <polygon points="72.9,36 65.5,48.8 50.7,48.8 43.3,36 50.7,23.2 65.5,23.2" fill="#F5A800"/>
-        <polygon points="72.9,64 65.5,76.8 50.7,76.8 43.3,64 50.7,51.2 65.5,51.2" fill="#F5A800"/>
+        <polygon points="48.6,50 41.2,62.8 26.4,62.8 19,50 26.4,37.2 41.2,37.2" fill="#d8923e"/>
+        <polygon points="72.9,36 65.5,48.8 50.7,48.8 43.3,36 50.7,23.2 65.5,23.2" fill="#d8923e"/>
+        <polygon points="72.9,64 65.5,76.8 50.7,76.8 43.3,64 50.7,51.2 65.5,51.2" fill="#d8923e"/>
       </svg>
     </div>
     <div class="nav-name">Bill<span>Hive</span></div>
@@ -819,8 +831,8 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
             <svg width="192" height="192" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="hvAmber" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#FFD000"/>
-                  <stop offset="100%" stop-color="#D4890A"/>
+                  <stop offset="0%" stop-color="#f0c073"/>
+                  <stop offset="100%" stop-color="#b8721e"/>
                 </linearGradient>
                 <linearGradient id="hvShine" x1="0%" y1="0%" x2="55%" y2="100%">
                   <stop offset="0%" stop-color="white" stop-opacity="0.12"/>
@@ -1009,8 +1021,8 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
           <div class="mbill-body">
             <div style="display:grid;grid-template-columns:34px 1fr 24px;gap:6px;align-items:center;padding:8px 0 10px;border-bottom:1px solid var(--border);margin-bottom:10px;">
               <div style="width:34px;height:28px;background:rgba(245,168,0,0.14);border:1px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;">🏠</div>
-              <div style="height:28px;background:var(--surface3);border:1px solid var(--border);border-radius:5px;padding:0 8px;display:flex;align-items:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);">Mortgage</div>
-              <div style="width:24px;height:28px;border-radius:5px;background:linear-gradient(135deg,#F5A800,#e09500);border:1px solid var(--border);"></div>
+              <div style="height:28px;background:var(--surface3);border:1px solid var(--border);border-radius:5px;padding:0 8px;display:flex;align-items:center;font-family:'Courier Prime',monospace;font-size:10px;color:var(--muted);">Mortgage</div>
+              <div style="width:24px;height:28px;border-radius:5px;background:linear-gradient(135deg,#F5A800,#d4890a);border:1px solid var(--border);"></div>
             </div>
             <div class="mbill-lhd"><div>Person</div><div style="text-align:right">%</div><div style="text-align:right">Amount</div></div>
             <div class="mbill-line">
@@ -1108,7 +1120,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
             <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="viA1" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#FFD000"/><stop offset="100%" stop-color="#D4890A"/>
+                  <stop offset="0%" stop-color="#f0c073"/><stop offset="100%" stop-color="#b8721e"/>
                 </linearGradient>
               </defs>
               <rect width="38" height="38" rx="8" fill="#0e0e0e"/>
@@ -1146,7 +1158,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
             <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="viA2" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#FFD000"/><stop offset="100%" stop-color="#D4890A"/>
+                  <stop offset="0%" stop-color="#f0c073"/><stop offset="100%" stop-color="#b8721e"/>
                 </linearGradient>
               </defs>
               <rect width="38" height="38" rx="8" fill="#f5f0e8"/>
@@ -1218,7 +1230,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
             <div class="setup-step-hex">2</div>
             <div class="setup-step-body">
               <h4>Open in your browser</h4>
-              <p>Navigate to <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--amber)">http://localhost:8080</span>. The app loads instantly — no login, no setup wizard.</p>
+              <p>Navigate to <span style="font-family:'Courier Prime',monospace;font-size:12px;color:var(--amber)">http://localhost:8080</span>. The app loads instantly — no login, no setup wizard.</p>
             </div>
           </div>
           <div class="setup-step reveal d4">
@@ -1230,7 +1242,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
           </div>
         </div>
         <div class="setup-note reveal d5">
-          <strong>Multi-user?</strong> Deploy behind <strong>Authelia</strong> or <strong>Authentik</strong>. BillHive reads the <code style="font-family:'DM Mono',monospace;font-size:11px">Remote-User</code> header and automatically scopes all data per user — safe for a shared household server.
+          <strong>Multi-user?</strong> Deploy behind <strong>Authelia</strong> or <strong>Authentik</strong>. BillHive reads the <code style="font-family:'Courier Prime',monospace;font-size:11px">Remote-User</code> header and automatically scopes all data per user — safe for a shared household server.
         </div>
       </div>
 
@@ -1341,9 +1353,9 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
         <a href="#" class="nav-logo" style="display:inline-flex;">
           <div class="nav-hexmark">
             <svg width="22" height="22" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="48.6,50 41.2,62.8 26.4,62.8 19,50 26.4,37.2 41.2,37.2" fill="#F5A800"/>
-              <polygon points="72.9,36 65.5,48.8 50.7,48.8 43.3,36 50.7,23.2 65.5,23.2" fill="#F5A800"/>
-              <polygon points="72.9,64 65.5,76.8 50.7,76.8 43.3,64 50.7,51.2 65.5,51.2" fill="#F5A800"/>
+              <polygon points="48.6,50 41.2,62.8 26.4,62.8 19,50 26.4,37.2 41.2,37.2" fill="#d8923e"/>
+              <polygon points="72.9,36 65.5,48.8 50.7,48.8 43.3,36 50.7,23.2 65.5,23.2" fill="#d8923e"/>
+              <polygon points="72.9,64 65.5,76.8 50.7,76.8 43.3,64 50.7,51.2 65.5,51.2" fill="#d8923e"/>
             </svg>
           </div>
           <div class="nav-name">Bill<span>Hive</span></div>
@@ -1372,7 +1384,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
     </div>
     <div class="footer-bottom">
       <div class="footer-badge">Open source · iPhone &amp; Web · No subscription</div>
-      <span style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;">BILLHIVE · MIT LICENSE</span>
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.12em;">BILLHIVE · MIT LICENSE</span>
     </div>
   </div>
 </footer>
@@ -1437,14 +1449,14 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 
         // Outline stroke for every visible hex
         hexPath(x, y, R - 2);
-        ctx.strokeStyle = `rgba(245,168,0,${(alpha * 0.13).toFixed(3)})`;
+        ctx.strokeStyle = `rgba(216,146,62,${(alpha * 0.13).toFixed(3)})`;
         ctx.lineWidth = 0.8;
         ctx.stroke();
 
         // Subtle fill accent for hexes closest to the center cluster
         if (alpha > 0.55 && Math.abs(dx) < R * 3 && Math.abs(dy) < R * 3) {
           hexPath(x, y, R - 2);
-          ctx.fillStyle = `rgba(245,168,0,${(alpha * 0.04).toFixed(3)})`;
+          ctx.fillStyle = `rgba(216,146,62,${(alpha * 0.04).toFixed(3)})`;
           ctx.fill();
         }
       }
@@ -1495,7 +1507,7 @@ window.addEventListener('scroll', () => {
   const nav = document.getElementById('main-nav');
   if (nav) {
     nav.style.borderBottomColor =
-      window.scrollY > 60 ? 'rgba(245,168,0,0.12)' : 'rgba(245,168,0,0.07)';
+      window.scrollY > 60 ? 'rgba(216,146,62,0.28)' : 'rgba(216,146,62,0.18)';
   }
 }, { passive: true });
 </script>
