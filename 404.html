@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<title>BillHive · Open in App</title>
+<!--
+  404.html doubles as the share-link landing page. GitHub Pages serves
+  this file for any unmatched path, which lets us route
+  https://billhiveapp.com/share/<token> through a single static file
+  without needing a backend or per-token static page.
+
+  Behavior:
+  - If the URL is /share/<token>: shows "Open in BillHive" deep-link
+    button (custom URL scheme billhive://share/<token>) and a fallback
+    App Store install link.
+  - Otherwise: shows a standard "404 Not Found" message linking back
+    to the home page.
+
+  We try to auto-open the app on iOS by triggering the custom scheme
+  on first load (single attempt — Safari blocks subsequent redirects).
+  If the app isn't installed, the user sees the install / open buttons.
+-->
+<style>
+  :root {
+    --bg:       #f4ecda;
+    --surface:  #fbf5e8;
+    --surface2: #ede1c6;
+    --border:   #d8c8a4;
+    --text:     #2b1d11;
+    --text2:    #4a3826;
+    --muted:    #7a6a52;
+    --amber:    #d8923e;
+    --honey-deep: #b8721e;
+    --honey-soft: #f0c073;
+    --shadow:   rgba(73, 56, 38, 0.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:       #221810;
+      --surface:  #332618;
+      --surface2: #332618;
+      --border:   #7a6442;
+      --text:     #f0e6d0;
+      --text2:    #d4c5a0;
+      --muted:    #a08e6e;
+      --amber:    #7eb8d6;
+      --honey-deep: #5497b8;
+      --honey-soft: #b4d5e6;
+      --shadow:   rgba(0, 0, 0, 0.25);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 48px 22px 80px;
+    text-align: center;
+  }
+  .brand {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-bottom: 32px;
+    color: var(--honey-deep);
+    font-weight: 600; font-size: 14px;
+  }
+  .brand-hex {
+    width: 22px; height: 22px;
+    background: var(--amber);
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  }
+  h1 {
+    font-size: 28px; font-weight: 700;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  p.lede {
+    color: var(--muted);
+    font-size: 15px;
+    margin: 0 0 36px;
+    line-height: 1.55;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 22px;
+    margin: 0 0 14px;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+  .btn {
+    display: inline-block;
+    background: var(--amber);
+    border: 1px solid var(--honey-deep);
+    border-radius: 12px;
+    padding: 14px 22px;
+    font-size: 16px; font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    transition: background 0.15s, transform 0.1s;
+    margin-bottom: 10px;
+  }
+  .btn:hover  { background: var(--honey-soft); }
+  .btn:active { transform: scale(0.97); }
+  .btn.secondary {
+    background: var(--surface2);
+    border-color: var(--border);
+    color: var(--text);
+  }
+  .btn-link {
+    display: inline-block;
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 13px;
+    text-decoration: underline;
+  }
+  .token {
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-top: 8px;
+  }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="brand">
+    <span class="brand-hex"></span>
+    <span>BillHive</span>
+  </span>
+
+  <!-- /share/<token> branch -->
+  <div id="share-pane" class="hidden">
+    <h1>A friend shared a check</h1>
+    <p class="lede">
+      Open it in BillHive to tap the items you had and let your host see what you owe.
+      No account or sign-up needed — just tap below.
+    </p>
+
+    <div class="card">
+      <a id="open-app" class="btn" href="#">Open in BillHive</a><br/>
+      <a class="btn secondary" href="https://apps.apple.com/app/id6754249000">Install BillHive</a>
+      <div class="token" id="token-display"></div>
+    </div>
+
+    <a class="btn-link" href="/">← Back to billhiveapp.com</a>
+  </div>
+
+  <!-- Generic 404 branch -->
+  <div id="not-found-pane" class="hidden">
+    <h1>Page not found</h1>
+    <p class="lede">
+      The page you're looking for doesn't exist. It may have moved or never been here.
+    </p>
+    <div class="card">
+      <a class="btn" href="/">Go to billhiveapp.com</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const path = window.location.pathname || '';
+  // Match /share/<token> — token is the first non-empty segment after /share/.
+  // We accept trailing slashes and ignore extra path segments.
+  const shareMatch = path.match(/^\/share\/([^/?#]+)/i);
+
+  if (!shareMatch) {
+    document.getElementById('not-found-pane').classList.remove('hidden');
+    return;
+  }
+
+  const token = shareMatch[1];
+  const appURL = 'billhive://share/' + encodeURIComponent(token);
+
+  const sharePane = document.getElementById('share-pane');
+  sharePane.classList.remove('hidden');
+
+  const openBtn = document.getElementById('open-app');
+  openBtn.href = appURL;
+
+  const tokenEl = document.getElementById('token-display');
+  // Show a truncated form so users can see SOMETHING (helpful when debugging)
+  // without dumping the full secret on screen.
+  tokenEl.textContent = 'token: ' + token.slice(0, 8) + '…';
+
+  // Try to auto-trigger the deep link on first load — works for users who
+  // tapped the URL directly in iMessage (gesture context preserved). If the
+  // app isn't installed, Safari silently does nothing and the user sees
+  // the "Install BillHive" button.
+  setTimeout(() => {
+    window.location.href = appURL;
+  }, 250);
+})();
+</script>
+</body>
+</html>
