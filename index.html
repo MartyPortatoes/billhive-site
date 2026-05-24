@@ -2,8 +2,8 @@
 <!--
   BillHive — Marketing & Landing Page
   ====================================
-  Single-page site for billhiveapp.com. Showcases the BillHive household
-  bill-splitting tool (self-hosted web app + iOS companion apps).
+  Single-page site for billhiveapp.com. Showcases BillHive — household
+  bills, restaurant checks, and trip expenses (self-hosted web app + iOS companion apps).
 
   Stack: Static HTML/CSS/JS, hosted on GitHub Pages.
   Fonts: Newsreader (headings), Courier Prime (UI/code), Outfit (body), Syncopate (brand wordmark).
@@ -20,14 +20,14 @@
     #support   — Email, GitHub Issues, FAQ
     footer     — Links, branding, license
 
-  Last reviewed: 2026-03-22
+  Last reviewed: 2026-05-24
 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BillHive — Your Household Bills. Handled.</title>
-<meta name="description" content="Self-hosted household bill management. Smart splitting, Zelle/Venmo/Cash App deep-links, HTML email summaries, and month-over-month trends. One Docker container.">
+<title>BillHive — Bills. Checks. Trips. Handled.</title>
+<meta name="description" content="Split household bills, restaurant checks, and trip expenses — all in one app. Zelle/Venmo/Cash App deep-links, receipt OCR, no-account share links, and month-over-month trends. iPhone app + self-hosted Docker container.">
 <!-- Security: restrict resource origins; upgrade insecure requests -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://tools.applemediaservices.com data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -39,13 +39,13 @@
 <!-- Open Graph (social sharing previews) -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://billhiveapp.com/">
-<meta property="og:title" content="BillHive — Your Household Bills. Handled.">
-<meta property="og:description" content="Self-hosted household bill management. Smart splitting, Zelle/Venmo/Cash App deep-links, HTML email summaries, and month-over-month trends.">
+<meta property="og:title" content="BillHive — Bills. Checks. Trips. Handled.">
+<meta property="og:description" content="Split household bills, restaurant checks, and trip expenses — all in one app. Payment deep-links, receipt OCR, share links, and trends. iPhone + self-hosted.">
 <meta property="og:site_name" content="BillHive">
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BillHive — Your Household Bills. Handled.">
-<meta name="twitter:description" content="Self-hosted household bill management. Smart splitting, payment deep-links, and email summaries. One Docker container.">
+<meta name="twitter:title" content="BillHive — Bills. Checks. Trips. Handled.">
+<meta name="twitter:description" content="Split household bills, restaurant checks, and trip expenses — all in one app. Payment deep-links, receipt OCR, and no-account share links.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@500;600;700&family=Outfit:wght@300;400;500;600;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@700&display=swap" rel="stylesheet">
@@ -790,11 +790,12 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
         <h1 class="hero-title">
           <span class="h-bill">BILL</span><span class="h-hive">HIVE</span>
         </h1>
-        <div class="hero-tagline">Your household bills. Handled.</div>
+        <div class="hero-tagline">Bills. Checks. Trips. Handled.</div>
         <p class="hero-desc">
-          One person fronts every bill. Everyone else owes them money.
-          BillHive tracks the splits, generates <strong>Zelle, Venmo &amp; Cash App deep-links</strong>,
-          and sends beautiful <strong>HTML email summaries</strong> — right on your
+          Three modes, one app. Split <strong>household bills</strong> monthly,
+          divvy up <strong>restaurant checks</strong> with receipt OCR,
+          and track <strong>trip expenses</strong> with multi-currency and debt simplification.
+          <strong>Zelle, Venmo &amp; Cash App deep-links</strong> built in — on your
           iPhone or from a self-hosted server.
         </p>
         <div class="hero-ctas">
@@ -870,10 +871,10 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 <div class="stats-strip" role="region" aria-label="Key statistics">
   <div class="wrap">
     <div class="stats-row">
-      <div class="stat-box reveal"><div class="stat-n">1</div><div class="stat-l">Docker container</div></div>
-      <div class="stat-box reveal d1"><div class="stat-n">4</div><div class="stat-l">Email providers</div></div>
-      <div class="stat-box reveal d2"><div class="stat-n">∞</div><div class="stat-l">Bills &amp; People</div></div>
-      <div class="stat-box reveal d3"><div class="stat-n">$0</div><div class="stat-l">Subscription</div></div>
+      <div class="stat-box reveal"><div class="stat-n">3</div><div class="stat-l">Modes — Bills · Checks · Trips</div></div>
+      <div class="stat-box reveal d1"><div class="stat-n">1</div><div class="stat-l">Docker container</div></div>
+      <div class="stat-box reveal d2"><div class="stat-n">∞</div><div class="stat-l">Bills, Checks &amp; Trips</div></div>
+      <div class="stat-box reveal d3"><div class="stat-n">$0</div><div class="stat-l">Subscription — ever</div></div>
     </div>
   </div>
 </div>
@@ -883,32 +884,32 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   <div class="wrap">
     <div class="section-kicker reveal">Process</div>
     <h2 id="how-heading" class="section-h reveal d1">How BillHive works</h2>
-    <p class="section-p reveal d2">From bill entry to payment collection in four steps. No SaaS account, no subscription — use it on your iPhone or self-host it.</p>
+    <p class="section-p reveal d2">From splitting to collecting — four steps for any scenario. No SaaS account, no subscription — use it on your iPhone or self-host it.</p>
 
     <div class="steps-grid">
       <div class="step-card reveal">
         <div class="step-num-hex"><span>01</span></div>
         <span class="step-emoji">📋</span>
-        <div class="step-t">Add your bills</div>
-        <div class="step-d">Create recurring bills and assign lines to household members. Choose percentage splits or fixed dollar amounts. Set "covered by" relationships for complex family arrangements.</div>
+        <div class="step-t">Pick your mode</div>
+        <div class="step-d">Long-press the Mode tab to switch between Bills, Checks, and Trips. Each mode has its own focused experience — recurring household bills, one-off restaurant checks, or multi-day trip expenses.</div>
       </div>
       <div class="step-card reveal d1">
         <div class="step-num-hex"><span>02</span></div>
         <span class="step-emoji">✏️</span>
-        <div class="step-t">Enter amounts</div>
-        <div class="step-d">Each month, enter the actual bill totals. BillHive instantly calculates each person's share. Enable auto-carry for fixed bills like mortgage that don't change month to month.</div>
+        <div class="step-t">Enter the details</div>
+        <div class="step-d">Add bills with percentage or fixed splits. Scan a receipt with OCR to auto-populate check items. Log trip expenses with multi-payer support. BillHive calculates every share instantly.</div>
       </div>
       <div class="step-card reveal d2">
         <div class="step-num-hex"><span>03</span></div>
         <span class="step-emoji">💰</span>
         <div class="step-t">See who owes what</div>
-        <div class="step-d">The Summary tab shows each person's total owed with a full bill-by-bill breakdown. Your personal outlay is tracked separately. Month-over-month charts show spending history.</div>
+        <div class="step-d">Summary and settle-up views show each person's balance at a glance. Debt simplification minimizes the number of transfers needed. Month-over-month charts track spending history.</div>
       </div>
       <div class="step-card reveal d3">
         <div class="step-num-hex"><span>04</span></div>
         <span class="step-emoji">📤</span>
         <div class="step-t">Collect payment</div>
-        <div class="step-d">Send personalized HTML email summaries with one tap. Zelle, Venmo, and Cash App deep-links are auto-generated with the exact amount. A monthly checklist tracks what's been sent and collected.</div>
+        <div class="step-d">Send personalized HTML email summaries or share a link — friends claim their own items with no account required. Zelle, Venmo, and Cash App deep-links are pre-filled with the exact amount.</div>
       </div>
     </div>
   </div>
@@ -921,38 +922,53 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   <div class="wrap">
     <div class="section-kicker reveal">Features</div>
     <h2 id="features-heading" class="section-h reveal d1">Everything you need</h2>
-    <p class="section-p reveal d2">Built for real households with real complexity. Flexible enough to handle any bill arrangement you can imagine.</p>
+    <p class="section-p reveal d2">Three modes, one app. Built for real households, real dinners, and real trips — with the flexibility to handle any arrangement you can imagine.</p>
 
     <div class="feat-grid">
       <div class="feat-card reveal">
         <div class="feat-icon">⚖️</div>
         <div class="feat-t">Smart bill splitting</div>
-        <div class="feat-d">Split by percentage or fixed dollar amounts per line. Set "covered by" relationships — Dad can pay on Mom's behalf while Mom shows $0 owed.</div>
+        <div class="feat-d">Split recurring bills by percentage or fixed dollar amounts per line. Set "covered by" relationships — Dad can pay on Mom's behalf while Mom shows $0 owed.</div>
       </div>
       <div class="feat-card reveal d1">
-        <div class="feat-icon">💸</div>
-        <div class="feat-t">Payment deep-links</div>
-        <div class="feat-d">Zelle, Venmo, and Cash App links auto-generated with the exact amount pre-filled. Custom Zelle URLs supported for banks with their own enrollment flows.</div>
+        <div class="feat-icon">🧾</div>
+        <div class="feat-t">Receipt OCR</div>
+        <div class="feat-d">Snap a photo of any restaurant receipt. On-device Vision AI extracts line items, tax, and tip — ready for your friends to claim their items.</div>
       </div>
       <div class="feat-card reveal d2">
-        <div class="feat-icon">📧</div>
-        <div class="feat-t">HTML email summaries</div>
-        <div class="feat-d">Beautiful dark-themed bill summaries sent to each person with one click. The iOS app uses native Mail, while the server version supports Mailgun, SendGrid, Resend, and SMTP.</div>
+        <div class="feat-icon">✈️</div>
+        <div class="feat-t">Trip expense tracking</div>
+        <div class="feat-d">Create trips with members, log multi-payer expenses across categories, attach receipts, and let the debt simplification algorithm settle up with minimal transfers.</div>
       </div>
       <div class="feat-card reveal d3">
-        <div class="feat-icon">📈</div>
-        <div class="feat-t">Trend charts</div>
-        <div class="feat-d">Track spending month-over-month with line charts, donut breakdowns, and stacked bar charts. Two views: Per Person and By Bill. Powered by Chart.js.</div>
+        <div class="feat-icon">💸</div>
+        <div class="feat-t">Payment deep-links</div>
+        <div class="feat-d">Zelle, Venmo, and Cash App links auto-generated with the exact amount pre-filled across all three modes. One tap to request or send payment.</div>
       </div>
       <div class="feat-card reveal d4">
+        <div class="feat-icon">🔗</div>
+        <div class="feat-t">No-account share links</div>
+        <div class="feat-d">Share a check or trip invite via link — friends claim their own items or join a trip with no app install or account required. The host sees claims in real time.</div>
+      </div>
+      <div class="feat-card reveal d5">
+        <div class="feat-icon">📧</div>
+        <div class="feat-t">HTML email summaries</div>
+        <div class="feat-d">Beautiful dark-themed summaries sent to each person with one click. The iOS app uses native Mail, while the server supports Mailgun, SendGrid, Resend, and SMTP.</div>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">📈</div>
+        <div class="feat-t">Trend charts</div>
+        <div class="feat-d">Track spending month-over-month with line charts, donut breakdowns, and stacked bar charts. Two views: Per Person and By Bill. Powered by Chart.js and Swift Charts.</div>
+      </div>
+      <div class="feat-card reveal d1">
         <div class="feat-icon">✅</div>
         <div class="feat-t">Monthly checklist</div>
         <div class="feat-d">Auto-generated checklist tracks what's been emailed, paid, and collected each month. Items are built dynamically from your configured people and bills.</div>
       </div>
-      <div class="feat-card reveal d5">
+      <div class="feat-card reveal d2">
         <div class="feat-icon">🔒</div>
         <div class="feat-t">Your data, your way</div>
-        <div class="feat-d">Store everything locally on your iPhone — or self-host with one Docker container and a SQLite database. Either way, your data stays yours. No cloud, no accounts, no tracking.</div>
+        <div class="feat-d">Store everything locally on your iPhone, sync via iCloud, or self-host with one Docker container and a SQLite database. No cloud lock-in, no accounts, no tracking.</div>
       </div>
     </div>
   </div>
@@ -963,7 +979,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   <div class="wrap">
     <div class="section-kicker reveal">App Preview</div>
     <h2 id="preview-heading" class="section-h reveal d1">See it in action</h2>
-    <p class="section-p reveal d2">The Bills tab — enter totals, see splits instantly across all household members. Every number updates live as you type.</p>
+    <p class="section-p reveal d2">Bills mode — enter totals, see splits instantly across all household members. Every number updates live as you type. Switch to Checks or Trips mode for restaurant and travel splitting.</p>
 
     <div class="browser-chrome reveal d2">
       <div class="bc-bar">
@@ -1100,7 +1116,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
     <div class="ios-intro">
       <div class="section-kicker reveal">iOS Companion</div>
       <h2 id="ios-heading" class="section-h reveal d1">BillHive on your iPhone — two ways</h2>
-      <p class="section-p reveal d2">The same native app, two different builds. Choose based on how you want to store your data: locally on-device, or on your self-hosted server.</p>
+      <p class="section-p reveal d2">Three modes — Bills, Checks, and Trips — in one native app. Choose your build based on how you want to store your data: locally on-device with iCloud sync, or on your self-hosted server.</p>
     </div>
 
     <div class="ios-variants reveal d2">
@@ -1128,13 +1144,13 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
             <span class="ios-variant-tag standalone">Standalone</span>
           </div>
         </div>
-        <p class="ios-variant-desc">Fully self-contained — no server required. Your data lives entirely on your iPhone. Great for personal use or anyone who prefers to skip the server setup.</p>
+        <p class="ios-variant-desc">Fully self-contained — no server required. Your data lives on your iPhone with iCloud sync. Great for personal use or anyone who prefers to skip the server setup.</p>
         <ul class="ios-variant-features">
-          <li>Data stored locally on-device — nothing leaves your phone</li>
-          <li>No server URL, no Docker, no setup required</li>
+          <li>Three modes — Bills, Checks, and Trips — switch with a long-press</li>
+          <li>Data stored locally with iCloud sync across devices</li>
+          <li>Receipt OCR, no-account share links via iCloud, PNG export</li>
           <li>Sends emails via iOS Mail (your existing mail account)</li>
-          <li>Works completely offline</li>
-          <li>All five tabs — Bills, Summary, Pay &amp; Collect, Trends, Settings</li>
+          <li>Works completely offline — no server, no Docker, no setup</li>
         </ul>
         <div class="ios-variant-cta">
           <a href="https://apps.apple.com/app/billhive-bill-splitting/id6759998736" target="_blank" rel="noopener noreferrer" style="display:inline-flex;height:44px;" aria-label="Download on the App Store">
@@ -1168,11 +1184,11 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
         </div>
         <p class="ios-variant-desc">A companion to your self-hosted BillHive server. Your data lives on your server and syncs with the web app — the iOS app is just another window into it.</p>
         <ul class="ios-variant-features">
-          <li>Connects directly to your BillHive server via URL</li>
+          <li>Three modes — Bills, Checks, and Trips — all synced to your server</li>
           <li>Data syncs between web app and iPhone in real time</li>
+          <li>No-account share links hosted on your server — friends claim items via browser</li>
           <li>Sends rich HTML emails via your server's relay (Mailgun, SendGrid, SMTP)</li>
-          <li>Requires BillHive server to be running and reachable</li>
-          <li>All five tabs — Bills, Summary, Pay &amp; Collect, Trends, Settings</li>
+          <li>Receipt OCR, trip settlements, multi-payer expenses, and CSV/PDF export</li>
         </ul>
         <div class="ios-variant-cta">
           <a href="https://apps.apple.com/app/selfhive-bill-splitting/id6760245713" target="_blank" rel="noopener noreferrer" style="display:inline-flex;height:44px;" aria-label="Download on the App Store">
@@ -1187,12 +1203,14 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
     <div class="ios-shared reveal d3">
       <div class="ios-shared-title">Both versions include</div>
       <div class="ios-shared-pills">
-        <span class="ios-shared-pill">Live split calculation</span>
-        <span class="ios-shared-pill">All 5 tabs</span>
+        <span class="ios-shared-pill">3 modes — Bills · Checks · Trips</span>
         <span class="ios-shared-pill">Zelle, Venmo &amp; Cash App deep-links</span>
+        <span class="ios-shared-pill">Receipt OCR scan</span>
+        <span class="ios-shared-pill">No-account share links</span>
+        <span class="ios-shared-pill">Debt simplification</span>
         <span class="ios-shared-pill">Month-over-month trends</span>
         <span class="ios-shared-pill">Bill preserve / auto-fill</span>
-        <span class="ios-shared-pill">Coverage tracking</span>
+        <span class="ios-shared-pill">CSV &amp; PDF export</span>
         <span class="ios-shared-pill">Import &amp; export</span>
       </div>
     </div>
@@ -1317,12 +1335,16 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
             <p>Yes. BillHive is open-source under the MIT license. There are no subscriptions, in-app purchases, or ads — ever.</p>
           </details>
           <details>
+            <summary>What are the three modes?</summary>
+            <p><strong>Bills</strong> handles recurring household expenses month-to-month. <strong>Checks</strong> splits restaurant bills with receipt OCR and share links. <strong>Trips</strong> tracks travel expenses with multi-payer support and debt simplification. Long-press the Mode tab to switch.</p>
+          </details>
+          <details>
             <summary>Do I need a server to use the iOS app?</summary>
-            <p>No. The standalone <strong>BillHive</strong> app stores all data locally on your iPhone. Only the <strong>SelfHive</strong> variant requires a self-hosted server.</p>
+            <p>No. The standalone <strong>BillHive</strong> app stores all data locally on your iPhone with iCloud sync. Only the <strong>SelfHive</strong> variant requires a self-hosted server.</p>
           </details>
           <details>
             <summary>Where is my data stored?</summary>
-            <p>On the standalone iOS app, your data stays on your device in a local JSON file. On the self-hosted version, it's stored in a SQLite database on your server. Nothing is sent to any cloud service.</p>
+            <p>On the standalone iOS app, your data syncs via iCloud Documents across your devices. On the self-hosted version, it's stored in a SQLite database on your server. Nothing is sent to any third-party cloud service.</p>
           </details>
           <details>
             <summary>How do I move data between devices?</summary>
@@ -1352,7 +1374,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
           </div>
           <div class="nav-name">Bill<span>Hive</span></div>
         </a>
-        <p class="footer-brand-desc">Household bill management for iPhone and self-hosted servers. Track splits, send emails, collect reimbursements.</p>
+        <p class="footer-brand-desc">Bills, checks, and trips — split anything with anyone. iPhone app + self-hosted server. No subscription, no ads, no tracking.</p>
       </div>
       <nav aria-label="Project links">
         <div class="footer-col-title">Project</div>
@@ -1368,14 +1390,15 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
         <div class="footer-col-title">Features</div>
         <div class="footer-col-links">
           <a href="#features">Bill Splitting</a>
-          <a href="#features">Email Summaries</a>
+          <a href="#features">Check Splitting &amp; OCR</a>
+          <a href="#features">Trip Expenses</a>
           <a href="#features">Payment Links</a>
-          <a href="#features">Trends &amp; History</a>
+          <a href="#features">Share Links</a>
         </div>
       </nav>
     </div>
     <div class="footer-bottom">
-      <div class="footer-badge">Open source · iPhone &amp; Web · No subscription</div>
+      <div class="footer-badge">Open source · Bills · Checks · Trips · No subscription</div>
       <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.12em;">BILLHIVE · MIT LICENSE</span>
     </div>
   </div>

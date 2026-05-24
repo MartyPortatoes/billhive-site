@@ -8,13 +8,16 @@
 <!--
   404.html doubles as the share-link landing page. GitHub Pages serves
   this file for any unmatched path, which lets us route
-  https://billhiveapp.com/share/<token> through a single static file
-  without needing a backend or per-token static page.
+  https://billhiveapp.com/share/<token> and
+  https://billhiveapp.com/trip-invite/<token> through a single static
+  file without needing a backend or per-token static page.
 
   Behavior:
   - If the URL is /share/<token>: shows "Open in BillHive" deep-link
     button (custom URL scheme billhive://share/<token>) and a fallback
-    App Store install link.
+    App Store install link. (Check sharing)
+  - If the URL is /trip-invite/<token>: shows "Open in BillHive" deep-link
+    button (billhive://trip-invite/<token>). (Trip invite sharing)
   - Otherwise: shows a standard "404 Not Found" message linking back
     to the home page.
 
@@ -142,7 +145,7 @@
     <span>BillHive</span>
   </span>
 
-  <!-- /share/<token> branch -->
+  <!-- /share/<token> branch (check sharing) -->
   <div id="share-pane" class="hidden">
     <h1>A friend shared a check</h1>
     <p class="lede">
@@ -154,6 +157,23 @@
       <a id="open-app" class="btn" href="#">Open in BillHive</a><br/>
       <a class="btn secondary" href="https://apps.apple.com/app/id6754249000">Install BillHive</a>
       <div class="token" id="token-display"></div>
+    </div>
+
+    <a class="btn-link" href="/">← Back to billhiveapp.com</a>
+  </div>
+
+  <!-- /trip-invite/<token> branch (trip invite) -->
+  <div id="trip-invite-pane" class="hidden">
+    <h1>You're invited to a trip</h1>
+    <p class="lede">
+      Open in BillHive to see the trip details, join, and start adding expenses from your own device.
+      No account needed.
+    </p>
+
+    <div class="card">
+      <a id="open-trip" class="btn" href="#">Open in BillHive</a><br/>
+      <a class="btn secondary" href="https://apps.apple.com/app/id6754249000">Install BillHive</a>
+      <div class="token" id="trip-token-display"></div>
     </div>
 
     <a class="btn-link" href="/">← Back to billhiveapp.com</a>
@@ -174,36 +194,35 @@
 <script>
 (() => {
   const path = window.location.pathname || '';
-  // Match /share/<token> — token is the first non-empty segment after /share/.
-  // We accept trailing slashes and ignore extra path segments.
+
+  // Match /share/<token> (check sharing)
   const shareMatch = path.match(/^\/share\/([^/?#]+)/i);
+  // Match /trip-invite/<token> (trip invite)
+  const tripMatch = path.match(/^\/trip-invite\/([^/?#]+)/i);
 
-  if (!shareMatch) {
+  if (shareMatch) {
+    const token = shareMatch[1];
+    const appURL = 'billhive://share/' + encodeURIComponent(token);
+
+    document.getElementById('share-pane').classList.remove('hidden');
+    document.getElementById('open-app').href = appURL;
+    document.getElementById('token-display').textContent = 'token: ' + token.slice(0, 8) + '…';
+
+    setTimeout(() => { window.location.href = appURL; }, 250);
+
+  } else if (tripMatch) {
+    const token = tripMatch[1];
+    const appURL = 'billhive://trip-invite/' + encodeURIComponent(token);
+
+    document.getElementById('trip-invite-pane').classList.remove('hidden');
+    document.getElementById('open-trip').href = appURL;
+    document.getElementById('trip-token-display').textContent = 'token: ' + token.slice(0, 8) + '…';
+
+    setTimeout(() => { window.location.href = appURL; }, 250);
+
+  } else {
     document.getElementById('not-found-pane').classList.remove('hidden');
-    return;
   }
-
-  const token = shareMatch[1];
-  const appURL = 'billhive://share/' + encodeURIComponent(token);
-
-  const sharePane = document.getElementById('share-pane');
-  sharePane.classList.remove('hidden');
-
-  const openBtn = document.getElementById('open-app');
-  openBtn.href = appURL;
-
-  const tokenEl = document.getElementById('token-display');
-  // Show a truncated form so users can see SOMETHING (helpful when debugging)
-  // without dumping the full secret on screen.
-  tokenEl.textContent = 'token: ' + token.slice(0, 8) + '…';
-
-  // Try to auto-trigger the deep link on first load — works for users who
-  // tapped the URL directly in iMessage (gesture context preserved). If the
-  // app isn't installed, Safari silently does nothing and the user sees
-  // the "Install BillHive" button.
-  setTimeout(() => {
-    window.location.href = appURL;
-  }, 250);
 })();
 </script>
 </body>
