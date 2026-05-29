@@ -9,8 +9,9 @@
   404.html doubles as the share-link landing page. GitHub Pages serves
   this file for any unmatched path, which lets us route
   https://billhiveapp.com/share/<token> and
-  https://billhiveapp.com/trip-invite/<token> through a single static
-  file without needing a backend or per-token static page.
+  https://billhiveapp.com/trip-invite/<token> and
+  https://billhiveapp.com/bills-invite/<token> through a single static
+  file without needing a per-token static page.
 
   Behavior:
   - If the URL is /share/<token>: shows "Open in BillHive" deep-link
@@ -18,6 +19,8 @@
     App Store install link. (Check sharing)
   - If the URL is /trip-invite/<token>: shows "Open in BillHive" deep-link
     button (billhive://trip-invite/<token>). (Trip invite sharing)
+  - If the URL is /bills-invite/<token>: shows "Open in BillHive" deep-link
+    button (billhive://bills-invite/<token>). (Bills invite sharing)
   - Otherwise: shows a standard "404 Not Found" message linking back
     to the home page.
 
@@ -135,6 +138,13 @@
     display: inline-block;
     margin-top: 8px;
   }
+  .status {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.45;
+    min-height: 18px;
+    margin-top: 8px;
+  }
   .hidden { display: none; }
 </style>
 </head>
@@ -157,6 +167,7 @@
       <a id="open-app" class="btn" href="#">Open in BillHive</a><br/>
       <a class="btn secondary" href="https://apps.apple.com/app/id6754249000">Install BillHive</a>
       <div class="token" id="token-display"></div>
+      <div class="status" id="share-status"></div>
     </div>
 
     <a class="btn-link" href="/">← Back to billhiveapp.com</a>
@@ -174,9 +185,39 @@
       <a id="open-trip" class="btn" href="#">Open in BillHive</a><br/>
       <a class="btn secondary" href="https://apps.apple.com/app/id6754249000">Install BillHive</a>
       <div class="token" id="trip-token-display"></div>
+      <div class="status" id="trip-status"></div>
     </div>
 
     <a class="btn-link" href="/">← Back to billhiveapp.com</a>
+  </div>
+
+  <!-- /bills-invite/<token> branch (bills invite) -->
+  <div id="bills-invite-pane" class="hidden">
+    <h1>You're invited to view bills</h1>
+    <p class="lede">
+      Open in BillHive to see your part of the shared household bills.
+      No account needed.
+    </p>
+
+    <div class="card">
+      <a id="open-bills" class="btn" href="#">Open in BillHive</a><br/>
+      <a class="btn secondary" href="https://apps.apple.com/app/id6754249000">Install BillHive</a>
+      <div class="token" id="bills-token-display"></div>
+      <div class="status" id="bills-status"></div>
+    </div>
+
+    <a class="btn-link" href="/">← Back to billhiveapp.com</a>
+  </div>
+
+  <!-- Inactive share branch -->
+  <div id="inactive-pane" class="hidden">
+    <h1>This link is no longer active</h1>
+    <p class="lede" id="inactive-message">
+      Ask the person who shared it to send a new BillHive link.
+    </p>
+    <div class="card">
+      <a class="btn" href="/">Go to billhiveapp.com</a>
+    </div>
   </div>
 
   <!-- Generic 404 branch -->
@@ -194,34 +235,101 @@
 <script>
 (() => {
   const path = window.location.pathname || '';
+  // Public Edge Function URL; safe to expose because table access stays server-side.
+  const SHARE_API_BASE = window.BILLHIVE_SHARE_API_BASE || 'https://yzrlmswlmjefmcntcist.functions.supabase.co/share-api';
+  const backendHint = (new URLSearchParams(window.location.search).get('backend') || '').toLowerCase();
 
   // Match /share/<token> (check sharing)
   const shareMatch = path.match(/^\/share\/([^/?#]+)/i);
   // Match /trip-invite/<token> (trip invite)
   const tripMatch = path.match(/^\/trip-invite\/([^/?#]+)/i);
+  // Match /bills-invite/<token> (bills invite)
+  const billsMatch = path.match(/^\/bills-invite\/([^/?#]+)/i);
 
   if (shareMatch) {
     const token = shareMatch[1];
-    const appURL = 'billhive://share/' + encodeURIComponent(token);
 
     document.getElementById('share-pane').classList.remove('hidden');
-    document.getElementById('open-app').href = appURL;
     document.getElementById('token-display').textContent = 'token: ' + token.slice(0, 8) + '…';
-
-    setTimeout(() => { window.location.href = appURL; }, 250);
+    prepareShareLink({
+      token,
+      route: 'share',
+      endpoint: '/public/share/check/',
+      buttonId: 'open-app',
+      statusId: 'share-status',
+    });
 
   } else if (tripMatch) {
     const token = tripMatch[1];
-    const appURL = 'billhive://trip-invite/' + encodeURIComponent(token);
 
     document.getElementById('trip-invite-pane').classList.remove('hidden');
-    document.getElementById('open-trip').href = appURL;
     document.getElementById('trip-token-display').textContent = 'token: ' + token.slice(0, 8) + '…';
+    prepareShareLink({
+      token,
+      route: 'trip-invite',
+      endpoint: '/public/trip/invite/',
+      buttonId: 'open-trip',
+      statusId: 'trip-status',
+    });
 
-    setTimeout(() => { window.location.href = appURL; }, 250);
+  } else if (billsMatch) {
+    const token = billsMatch[1];
+
+    document.getElementById('bills-invite-pane').classList.remove('hidden');
+    document.getElementById('bills-token-display').textContent = 'token: ' + token.slice(0, 8) + '…';
+    prepareShareLink({
+      token,
+      route: 'bills-invite',
+      endpoint: '/public/bills/invite/',
+      buttonId: 'open-bills',
+      statusId: 'bills-status',
+    });
 
   } else {
     document.getElementById('not-found-pane').classList.remove('hidden');
+  }
+
+  async function prepareShareLink({ token, route, endpoint, buttonId, statusId }) {
+    const button = document.getElementById(buttonId);
+    const status = document.getElementById(statusId);
+    let appURL = appDeepLink(route, token, backendHint === 'supabase');
+
+    if (SHARE_API_BASE) {
+      status.textContent = 'Checking link...';
+      try {
+        const response = await fetch(SHARE_API_BASE.replace(/\/+$/, '') + endpoint + encodeURIComponent(token), {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' },
+        });
+        if (response.ok) {
+          appURL = appDeepLink(route, token, true);
+          status.textContent = '';
+        } else if (response.status === 410 || (backendHint === 'supabase' && response.status === 404)) {
+          showInactive('This BillHive link is no longer active.');
+          return;
+        } else {
+          status.textContent = '';
+        }
+      } catch {
+        status.textContent = '';
+      }
+    }
+
+    button.href = appURL;
+    setTimeout(() => { window.location.href = appURL; }, 250);
+  }
+
+  function appDeepLink(route, token, usesSupabase) {
+    const base = 'billhive://' + route + '/' + encodeURIComponent(token);
+    return usesSupabase ? base + '?backend=supabase' : base;
+  }
+
+  function showInactive(message) {
+    document.getElementById('share-pane').classList.add('hidden');
+    document.getElementById('trip-invite-pane').classList.add('hidden');
+    document.getElementById('bills-invite-pane').classList.add('hidden');
+    document.getElementById('inactive-message').textContent = message;
+    document.getElementById('inactive-pane').classList.remove('hidden');
   }
 })();
 </script>
