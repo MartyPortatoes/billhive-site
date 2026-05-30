@@ -1,0 +1,19 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "V25M7FFAP2.com.billhive.app",
+          "V25M7FFAP2.com.billhive.selfhive"
+        ],
+        "components": [
+          { "/": "/share/*" },
+          { "/": "/join-trip" },
+          { "/": "/trip-invite/*" },
+          { "/": "/join-bills" },
+          { "/": "/bills-invite/*" }
+        ]
+      }
+    ]
+  }
+}
