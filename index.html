@@ -29,23 +29,46 @@
 <title>BillHive — Bills. Checks. Trips. Handled.</title>
 <meta name="description" content="Split household bills, restaurant checks, and trip expenses — all in one app. Zelle/Venmo/Cash App deep-links, receipt OCR, no-account share links, and month-over-month trends. iPhone app + self-hosted Docker container.">
 <!-- Security: restrict resource origins; upgrade insecure requests -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://tools.applemediaservices.com data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <!-- Theme & branding -->
 <meta name="theme-color" content="#f4ecda">
 <meta name="color-scheme" content="light">
 <!-- Canonical URL -->
 <link rel="canonical" href="https://billhiveapp.com/">
+<!-- Favicon: amber hexagon, matches the brand mark -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,3 93,27 93,73 50,97 7,73 7,27' fill='%23d8923e'/%3E%3C/svg%3E">
 <!-- Open Graph (social sharing previews) -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://billhiveapp.com/">
 <meta property="og:title" content="BillHive — Bills. Checks. Trips. Handled.">
 <meta property="og:description" content="Split household bills, restaurant checks, and trip expenses — all in one app. Payment deep-links, receipt OCR, share links, and trends. iPhone + self-hosted.">
 <meta property="og:site_name" content="BillHive">
+<!-- Social share image — gives link previews a thumbnail (iMessage, Slack, etc.) -->
+<meta property="og:image" content="https://billhiveapp.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="BillHive — split household bills, restaurant checks, and trip expenses">
+<meta name="twitter:card" content="summary_large_image">
 <!-- Twitter Card -->
-<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://billhiveapp.com/og-image.png">
 <meta name="twitter:title" content="BillHive — Bills. Checks. Trips. Handled.">
 <meta name="twitter:description" content="Split household bills, restaurant checks, and trip expenses — all in one app. Payment deep-links, receipt OCR, and no-account share links.">
+<!-- Structured data: helps search engines render a richer app result -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "BillHive",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "iOS, Web (self-hosted Docker)",
+  "description": "Split household bills, restaurant checks, and trip expenses in one app. Zelle, Venmo, and Cash App deep-links, receipt OCR, no-account share links, and month-over-month trends.",
+  "url": "https://billhiveapp.com/",
+  "downloadUrl": "https://apps.apple.com/app/billhive-bill-splitting/id6759998736",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "license": "https://opensource.org/licenses/MIT"
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@500;600;700&family=Outfit:wght@300;400;500;600;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@700&display=swap" rel="stylesheet">
@@ -690,7 +713,8 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 ══════════════════════════════════════════════ */
 @media (max-width: 920px) {
   .hero-grid { grid-template-columns: 1fr; }
-  .hero-visual { display: none; }
+  /* Keep the signature hive art for tablets; phones hide it (see ≤600 below) */
+  .hero-visual { margin-top: 24px; }
   .steps-grid { grid-template-columns: repeat(2,1fr); }
   .feat-grid  { grid-template-columns: 1fr 1fr; }
   .setup-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -710,6 +734,17 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   .steps-grid, .feat-grid { grid-template-columns: 1fr; }
   .hero-ctas { flex-direction: column; }
   .btn-p, .btn-s { justify-content: center; }
+
+  /* Phone hero: the orbiting rings (400px) overflow, so drop the orbit
+     layout and present the floating cards as a clean static stack — phone
+     users still see the "who owes what" story, just laid out vertically. */
+  .hv-wrap { width: 100%; height: auto; display: block; }
+  .hv-ring, .hv-glow { display: none; }
+  .hv-hex { margin: 0 auto 22px; animation: none; }
+  .hv-card {
+    position: static; width: 100%; margin: 0 0 10px;
+    white-space: normal; animation: none;
+  }
 }
 
 /* ══════════════════════════════════════════════
@@ -754,9 +789,9 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 
 <!-- ═══════ NAV ═══════ -->
 <nav id="main-nav" aria-label="Primary navigation">
-  <a href="#" class="nav-logo">
+  <a href="#hero" class="nav-logo" aria-label="BillHive home">
     <div class="nav-hexmark">
-      <svg width="22" height="22" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <svg width="22" height="22" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <polygon points="48.6,50 41.2,62.8 26.4,62.8 19,50 26.4,37.2 41.2,37.2" fill="#d8923e"/>
         <polygon points="72.9,36 65.5,48.8 50.7,48.8 43.3,36 50.7,23.2 65.5,23.2" fill="#d8923e"/>
         <polygon points="72.9,64 65.5,76.8 50.7,76.8 43.3,64 50.7,51.2 65.5,51.2" fill="#d8923e"/>
@@ -889,25 +924,25 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
     <div class="steps-grid">
       <div class="step-card reveal">
         <div class="step-num-hex"><span>01</span></div>
-        <span class="step-emoji">📋</span>
+        <span class="step-emoji" aria-hidden="true">📋</span>
         <div class="step-t">Pick your mode</div>
         <div class="step-d">Long-press the Mode tab to switch between Bills, Checks, and Trips. Each mode has its own focused experience — recurring household bills, one-off restaurant checks, or multi-day trip expenses.</div>
       </div>
       <div class="step-card reveal d1">
         <div class="step-num-hex"><span>02</span></div>
-        <span class="step-emoji">✏️</span>
+        <span class="step-emoji" aria-hidden="true">✏️</span>
         <div class="step-t">Enter the details</div>
         <div class="step-d">Add bills with percentage or fixed splits. Scan a receipt with OCR to auto-populate check items. Log trip expenses with multi-payer support. BillHive calculates every share instantly.</div>
       </div>
       <div class="step-card reveal d2">
         <div class="step-num-hex"><span>03</span></div>
-        <span class="step-emoji">💰</span>
+        <span class="step-emoji" aria-hidden="true">💰</span>
         <div class="step-t">See who owes what</div>
         <div class="step-d">Summary and settle-up views show each person's balance at a glance. Debt simplification minimizes the number of transfers needed. Month-over-month charts track spending history.</div>
       </div>
       <div class="step-card reveal d3">
         <div class="step-num-hex"><span>04</span></div>
-        <span class="step-emoji">📤</span>
+        <span class="step-emoji" aria-hidden="true">📤</span>
         <div class="step-t">Collect payment</div>
         <div class="step-d">Send personalized HTML email summaries or share a link — friends claim their own items with no account required. Zelle, Venmo, and Cash App deep-links are pre-filled with the exact amount.</div>
       </div>
@@ -926,47 +961,47 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
 
     <div class="feat-grid">
       <div class="feat-card reveal">
-        <div class="feat-icon">⚖️</div>
+        <div class="feat-icon" aria-hidden="true">⚖️</div>
         <div class="feat-t">Smart bill splitting</div>
         <div class="feat-d">Split recurring bills by percentage or fixed dollar amounts per line. Set "covered by" relationships — Dad can pay on Mom's behalf while Mom shows $0 owed.</div>
       </div>
       <div class="feat-card reveal d1">
-        <div class="feat-icon">🧾</div>
+        <div class="feat-icon" aria-hidden="true">🧾</div>
         <div class="feat-t">Receipt OCR</div>
         <div class="feat-d">Snap a photo of any restaurant receipt. On-device Vision AI extracts line items, tax, and tip — ready for your friends to claim their items.</div>
       </div>
       <div class="feat-card reveal d2">
-        <div class="feat-icon">✈️</div>
+        <div class="feat-icon" aria-hidden="true">✈️</div>
         <div class="feat-t">Trip expense tracking</div>
         <div class="feat-d">Create trips with members, log multi-payer expenses across categories, attach receipts, and let the debt simplification algorithm settle up with minimal transfers.</div>
       </div>
       <div class="feat-card reveal d3">
-        <div class="feat-icon">💸</div>
+        <div class="feat-icon" aria-hidden="true">💸</div>
         <div class="feat-t">Payment deep-links</div>
         <div class="feat-d">Zelle, Venmo, and Cash App links auto-generated with the exact amount pre-filled across all three modes. One tap to request or send payment.</div>
       </div>
       <div class="feat-card reveal d4">
-        <div class="feat-icon">🔗</div>
+        <div class="feat-icon" aria-hidden="true">🔗</div>
         <div class="feat-t">No-account share links</div>
         <div class="feat-d">Share a check or trip invite via link — friends claim their own items or join a trip with no app install or account required. The host sees claims in real time.</div>
       </div>
       <div class="feat-card reveal d5">
-        <div class="feat-icon">📧</div>
+        <div class="feat-icon" aria-hidden="true">📧</div>
         <div class="feat-t">HTML email summaries</div>
         <div class="feat-d">Beautiful dark-themed summaries sent to each person with one click. The iOS app uses native Mail, while the server supports Mailgun, SendGrid, Resend, and SMTP.</div>
       </div>
       <div class="feat-card reveal">
-        <div class="feat-icon">📈</div>
+        <div class="feat-icon" aria-hidden="true">📈</div>
         <div class="feat-t">Trend charts</div>
         <div class="feat-d">Track spending month-over-month with line charts, donut breakdowns, and stacked bar charts. Two views: Per Person and By Bill. Powered by Chart.js and Swift Charts.</div>
       </div>
       <div class="feat-card reveal d1">
-        <div class="feat-icon">✅</div>
+        <div class="feat-icon" aria-hidden="true">✅</div>
         <div class="feat-t">Monthly checklist</div>
         <div class="feat-d">Auto-generated checklist tracks what's been emailed, paid, and collected each month. Items are built dynamically from your configured people and bills.</div>
       </div>
       <div class="feat-card reveal d2">
-        <div class="feat-icon">🔒</div>
+        <div class="feat-icon" aria-hidden="true">🔒</div>
         <div class="feat-t">Your data, your way</div>
         <div class="feat-d">Store everything locally on your iPhone, sync via iCloud, or self-host with one Docker container and a SQLite database. No cloud lock-in, no accounts, no tracking.</div>
       </div>
@@ -1307,7 +1342,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
     <div class="support-grid">
 
       <div class="support-card reveal">
-        <div class="support-icon">📧</div>
+        <div class="support-icon" aria-hidden="true">📧</div>
         <h3 class="support-t">Email Support</h3>
         <p class="support-d">For questions, feedback, or account issues with the iOS app, send an email and you'll hear back within a few days.</p>
         <a href="mailto:billhive-support@mattp.me" class="btn-s" style="margin-top:12px;display:inline-flex;">
@@ -1317,7 +1352,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
       </div>
 
       <div class="support-card reveal d1">
-        <div class="support-icon">🐛</div>
+        <div class="support-icon" aria-hidden="true">🐛</div>
         <h3 class="support-t">Report a Bug</h3>
         <p class="support-d">Found something broken? Open a GitHub Issue on the relevant repository. Include your device, OS version, and steps to reproduce.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
@@ -1327,7 +1362,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
       </div>
 
       <div class="support-card reveal d2">
-        <div class="support-icon">💬</div>
+        <div class="support-icon" aria-hidden="true">💬</div>
         <h3 class="support-t">FAQ</h3>
         <div class="support-faq">
           <details>
@@ -1364,7 +1399,7 @@ footer { border-top: 1px solid var(--border); padding: 52px 0 28px; }
   <div class="wrap">
     <div class="footer-top">
       <div>
-        <a href="#" class="nav-logo" style="display:inline-flex;">
+        <a href="#hero" class="nav-logo" style="display:inline-flex;" aria-label="BillHive home">
           <div class="nav-hexmark">
             <svg width="22" height="22" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
               <polygon points="48.6,50 41.2,62.8 26.4,62.8 19,50 26.4,37.2 41.2,37.2" fill="#d8923e"/>
